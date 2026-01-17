@@ -599,6 +599,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Magician_RIO_Unity
       objectReference: {fileID: 0}
+    - target: {fileID: 4436805663696350335, guid: 97534f7d124d3534c9e2946baa5f8b95, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4436805663696350335, guid: 97534f7d124d3534c9e2946baa5f8b95, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4436805663696350335, guid: 97534f7d124d3534c9e2946baa5f8b95, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
