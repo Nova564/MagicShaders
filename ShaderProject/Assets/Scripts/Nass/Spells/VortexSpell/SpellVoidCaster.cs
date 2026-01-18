@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class SpellCaster : MonoBehaviour
+public class SpellVoidCaster : MonoBehaviour
 {
     [Header("Spell Prefabs")]
     [SerializeField] private GameObject _telegraphPrefab;
