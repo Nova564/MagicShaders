@@ -8,7 +8,9 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float gravity = 9.81f;
     [SerializeField] InputActionProperty _move;
     [SerializeField] InputActionProperty _sprint;
+    [SerializeField] InputActionProperty _jump;
     [SerializeField] float _speed = 5;
+    [SerializeField] float _jumpForce = 4;
     [SerializeField] CharacterController _characterController;
     [SerializeField] bool _HasGravity = true;
     [SerializeField] Animator _animator;
@@ -22,6 +24,7 @@ public class PlayerMove : MonoBehaviour
     private float mouseStillTimer = 0f;
     private const float mouseStillThreshold = 0.05f;
     private const float mouseStillDelay = 0.1f;
+    private bool _jumpPressed = false;
 
     void Start()
     {
@@ -30,6 +33,7 @@ public class PlayerMove : MonoBehaviour
         _move.action.canceled += StopMove;
         _sprint.action.performed += StartSprint;
         _sprint.action.canceled += StopSprint;
+        _jump.action.started += StartJump;
     }
 
     void OnDestroy()
@@ -38,6 +42,7 @@ public class PlayerMove : MonoBehaviour
         _move.action.canceled -= StopMove;
         _sprint.action.performed -= StartSprint;
         _sprint.action.canceled -= StopSprint;
+        _jump.action.started -= StartJump;
     }
 
     void StartMove(InputAction.CallbackContext ctx)
@@ -49,6 +54,7 @@ public class PlayerMove : MonoBehaviour
         else
         {
             _speed = 5;
+            _animator.SetBool("IsWalking", true);
         }
         var d = ctx.ReadValue<Vector2>();
         _direction = new Vector3(d.x, 0, d.y);
@@ -57,6 +63,7 @@ public class PlayerMove : MonoBehaviour
     void StopMove(InputAction.CallbackContext ctx)
     {
         _direction = Vector3.zero;
+        _animator.SetBool("IsWalking", false);
     }
 
     void Update()
@@ -64,17 +71,24 @@ public class PlayerMove : MonoBehaviour
         UpdateMove();
         RotateTowardsInput();
     }
+
+    void StartJump(InputAction.CallbackContext ctx)
+    {
+        if (_characterController.isGrounded)
+        {
+            _animator.SetTrigger("Jump");
+            velocity.y = _jumpForce;
+            _jumpPressed = true;
+        }
+    }
     
     void StartSprint(InputAction.CallbackContext ctx)
     {
-        _animator.SetBool("IsIdle", false);
         _animator.SetBool("IsWalking", false);
         _animator.SetBool("IsRunning", true);
     }
     void StopSprint(InputAction.CallbackContext ctx)
     {
-        _animator.SetBool("IsIdle", true);
-        _animator.SetBool("IsWalking", true);
         _animator.SetBool("IsRunning", false);
     }
 
@@ -95,11 +109,12 @@ public class PlayerMove : MonoBehaviour
             finalDirection = (forward * _direction.z + right * _direction.x).normalized;
         }
 
-        if (_characterController.isGrounded)
+        if (_characterController.isGrounded && !_jumpPressed)
             velocity.y = -1.0f;
         else if (_HasGravity)
         {
             velocity.y -= gravity * Time.deltaTime;
+            if(_characterController.isGrounded) _jumpPressed = false;
         }
         Vector3 move = finalDirection * _speed;
         move += velocity;
