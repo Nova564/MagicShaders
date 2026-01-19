@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 
@@ -28,6 +29,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float AtkCoolDown2 = 4.0f;
     [SerializeField] float AtkCoolDown3 = 10.0f;
     [SerializeField] float AtkCoolDown4 = 50.0f;
+    [SerializeField] Transform _handTransform;
+    private ConstraintSource _constraintSource;
     float nextAtk;
     float nextAtk2;
     float nextAtk3;
@@ -48,6 +51,9 @@ public class PlayerController : MonoBehaviour
         _lightningAttack.action.performed += Attack3; 
         _IceAttack.action.performed += Attack4;
         _vortexAttack.action.performed += Attack5;
+        
+        _constraintSource = new ConstraintSource();
+        _constraintSource.sourceTransform = _handTransform;
     }
 
     void OnDestroy()
@@ -193,7 +199,7 @@ public class PlayerController : MonoBehaviour
         Vector3 spawnPosition = transform.position + offset;
         spawnPosition.y += YProjOffSet;
         Quaternion spawnRotation = transform.rotation;
-        GameObject Hitbox = Instantiate(VortexPrefab, spawnPosition, spawnRotation);
+        GameObject Hitbox = Instantiate(VortexPrefab, _handTransform.position, spawnRotation);
         Projectile projectile = new Projectile();
         projectile.projectile = Hitbox;
         projectile.Direction = transform.forward.normalized;
@@ -203,6 +209,13 @@ public class PlayerController : MonoBehaviour
         projectile.IsPlayer = _playerEntity.IsPlayer;
         Hitbox.GetComponent<ProjectileStats>().projectile = projectile;
         _playerProjectiles.Add(projectile);
+        if (Hitbox.GetComponent<ParentConstraint>())
+        {
+            ParentConstraint constraint  =  Hitbox.GetComponent<ParentConstraint>();
+            constraint.AddSource(_constraintSource);
+            constraint.constraintActive = true;
+            constraint.locked = true;
+        }
     }
     
     

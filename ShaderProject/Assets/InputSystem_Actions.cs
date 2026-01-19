@@ -171,6 +171,42 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""FirstSpell"",
+                    ""type"": ""Button"",
+                    ""id"": ""56d8adb1-631b-4f3a-aca4-a110f41400ea"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SecondSpell"",
+                    ""type"": ""Button"",
+                    ""id"": ""fe396ef3-56a3-4dd5-bf62-345c8d9fbc33"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ThirdSpell"",
+                    ""type"": ""Button"",
+                    ""id"": ""d2e7c176-1a6f-4100-81a9-49f4d8988f69"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""FourthSpell"",
+                    ""type"": ""Button"",
+                    ""id"": ""a6b92e68-a414-4510-916e-d4c0e60de063"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -556,6 +592,50 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f791a163-09a6-4d33-8afe-ef3e3985e9e7"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FirstSpell"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a83eddb5-6c33-488d-8c3d-cc61f410260b"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SecondSpell"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1c800fc1-7b46-4bdb-aa26-bed5af512eaa"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ThirdSpell"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""72ac8c4b-46f3-4430-9e1f-2ce756aaa98b"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FourthSpell"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1152,6 +1232,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Previous = m_Player.FindAction("Previous", throwIfNotFound: true);
         m_Player_Next = m_Player.FindAction("Next", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
+        m_Player_FirstSpell = m_Player.FindAction("FirstSpell", throwIfNotFound: true);
+        m_Player_SecondSpell = m_Player.FindAction("SecondSpell", throwIfNotFound: true);
+        m_Player_ThirdSpell = m_Player.FindAction("ThirdSpell", throwIfNotFound: true);
+        m_Player_FourthSpell = m_Player.FindAction("FourthSpell", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1254,6 +1338,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Previous;
     private readonly InputAction m_Player_Next;
     private readonly InputAction m_Player_Sprint;
+    private readonly InputAction m_Player_FirstSpell;
+    private readonly InputAction m_Player_SecondSpell;
+    private readonly InputAction m_Player_ThirdSpell;
+    private readonly InputAction m_Player_FourthSpell;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1301,6 +1389,22 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Sprint".
         /// </summary>
         public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/FirstSpell".
+        /// </summary>
+        public InputAction @FirstSpell => m_Wrapper.m_Player_FirstSpell;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/SecondSpell".
+        /// </summary>
+        public InputAction @SecondSpell => m_Wrapper.m_Player_SecondSpell;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/ThirdSpell".
+        /// </summary>
+        public InputAction @ThirdSpell => m_Wrapper.m_Player_ThirdSpell;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/FourthSpell".
+        /// </summary>
+        public InputAction @FourthSpell => m_Wrapper.m_Player_FourthSpell;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1354,6 +1458,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Sprint.started += instance.OnSprint;
             @Sprint.performed += instance.OnSprint;
             @Sprint.canceled += instance.OnSprint;
+            @FirstSpell.started += instance.OnFirstSpell;
+            @FirstSpell.performed += instance.OnFirstSpell;
+            @FirstSpell.canceled += instance.OnFirstSpell;
+            @SecondSpell.started += instance.OnSecondSpell;
+            @SecondSpell.performed += instance.OnSecondSpell;
+            @SecondSpell.canceled += instance.OnSecondSpell;
+            @ThirdSpell.started += instance.OnThirdSpell;
+            @ThirdSpell.performed += instance.OnThirdSpell;
+            @ThirdSpell.canceled += instance.OnThirdSpell;
+            @FourthSpell.started += instance.OnFourthSpell;
+            @FourthSpell.performed += instance.OnFourthSpell;
+            @FourthSpell.canceled += instance.OnFourthSpell;
         }
 
         /// <summary>
@@ -1392,6 +1508,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Sprint.started -= instance.OnSprint;
             @Sprint.performed -= instance.OnSprint;
             @Sprint.canceled -= instance.OnSprint;
+            @FirstSpell.started -= instance.OnFirstSpell;
+            @FirstSpell.performed -= instance.OnFirstSpell;
+            @FirstSpell.canceled -= instance.OnFirstSpell;
+            @SecondSpell.started -= instance.OnSecondSpell;
+            @SecondSpell.performed -= instance.OnSecondSpell;
+            @SecondSpell.canceled -= instance.OnSecondSpell;
+            @ThirdSpell.started -= instance.OnThirdSpell;
+            @ThirdSpell.performed -= instance.OnThirdSpell;
+            @ThirdSpell.canceled -= instance.OnThirdSpell;
+            @FourthSpell.started -= instance.OnFourthSpell;
+            @FourthSpell.performed -= instance.OnFourthSpell;
+            @FourthSpell.canceled -= instance.OnFourthSpell;
         }
 
         /// <summary>
@@ -1755,6 +1883,34 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSprint(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "FirstSpell" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnFirstSpell(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "SecondSpell" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSecondSpell(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ThirdSpell" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnThirdSpell(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "FourthSpell" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnFourthSpell(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

@@ -115,7 +115,7 @@ public class SpellVoidCaster : MonoBehaviour
         }
     }
 
-    void CastSpell()
+    public void CastSpell()
     {
         if (_voidTrapPrefab == null) return;
 
