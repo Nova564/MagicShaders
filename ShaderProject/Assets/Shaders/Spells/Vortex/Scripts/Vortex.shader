@@ -50,8 +50,7 @@ Shader "Custom/VoidVortex"
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _VortexColor, _InnerGlow, _EdgeColor;
-                float _ChargeAmount, _VortexSpeed, _SpiralTightness, _EmissionStrength;
-                float _PulseSpeed, _InnerBrightness, _DepthLayers;
+                float _ChargeAmount, _VortexSpeed, _SpiralTightness, _EmissionStrength, _PulseSpeed, _InnerBrightness, _DepthLayers;
                 float4 _NoiseTexture_ST;
             CBUFFER_END
 
