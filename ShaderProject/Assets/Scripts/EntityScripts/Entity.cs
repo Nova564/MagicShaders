@@ -39,9 +39,10 @@ public class Entity : MonoBehaviour
         Health -= damage;
         OnDamageTaken?.Invoke();
         UpdateHealth();
-
-        SoundSystem.Instance.PlaySFX(soundeffectdamage, 0.3f);
-
+        if (soundeffectdamage != null)
+        {
+            SoundSystem.Instance.PlaySFX(soundeffectdamage, 0.3f);
+        }
     }
 
     void LevelUp()

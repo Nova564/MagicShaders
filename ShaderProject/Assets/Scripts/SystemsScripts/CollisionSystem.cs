@@ -72,9 +72,9 @@ public class CollisionSystem : MonoBehaviour
 
         if (ProjA != null && EntityB != null && ProjA.projectile.IsPlayer != EntityB.IsPlayer)
         {
-            if (ProjA.ProjectileParticle != null)
+            if (ProjA.CollisionParticle != null)
             {
-                ProjA.SpawnParticle(ProjA.ProjectileParticle);
+                ProjA.SpawnParticle(ProjA.CollisionParticle);
             }
             EntityB.TakeDamage(ProjA.projectile.Damage);
             Destroy(objA);

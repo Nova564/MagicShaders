@@ -3,10 +3,10 @@ using UnityEngine;
 public class ProjectileStats : MonoBehaviour
 {
     public Projectile projectile {get; set;}
-    [SerializeField] private ParticleSystem _projectileParticle;
-    [SerializeField] private ParticleSystem _SwordParticle;
-    public ParticleSystem ProjectileParticle { get { return _projectileParticle; } set{_projectileParticle = value;}}
-    public ParticleSystem SwordParticle { get { return _SwordParticle; } set{_SwordParticle = value;}}
+    [SerializeField] private ParticleSystem _collisionParticle;
+    [SerializeField] private ParticleSystem _launchParticle;
+    public ParticleSystem CollisionParticle { get { return _collisionParticle; } set{_collisionParticle = value;}}
+    public ParticleSystem LaunchParticle { get { return _launchParticle; } set{_launchParticle = value;}}
 
     void Awake()
     {
