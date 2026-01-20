@@ -95,7 +95,7 @@ public class SpellLightningCaster : MonoBehaviour
         _targetDirection = GetMouseDirection();
 
         Vector3 spawnPosition = transform.position + _targetDirection * _playerOffset + Vector3.up * _telegraphHeightOffset;
-        _currentTelegraph = Instantiate(_lightningTelegraphPrefab, spawnPosition, Quaternion.Euler(90, 180, 45));
+        _currentTelegraph = Instantiate(_lightningTelegraphPrefab, spawnPosition, Quaternion.identity);
 
         _currentTelegraph.transform.localScale = new Vector3(1f, 1f, _lightningLength);
 
@@ -120,7 +120,7 @@ public class SpellLightningCaster : MonoBehaviour
 
         if (_targetDirection != Vector3.zero)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(_targetDirection) * Quaternion.Euler(90, 180, 45);
+            Quaternion targetRotation = Quaternion.LookRotation(_targetDirection) * Quaternion.Euler(90, 310, 45);
             _currentTelegraph.transform.rotation = targetRotation;
         }
 

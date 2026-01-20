@@ -5329,6 +5329,7 @@ GameObject:
   - component: {fileID: 708868651}
   - component: {fileID: 708868653}
   - component: {fileID: 708868654}
+  - component: {fileID: 708868655}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -5546,6 +5547,41 @@ MonoBehaviour:
   _flameSpellHeightOffset: 0.01
   _playerOffset: 2.5
   _validColor: {r: 0, g: 1, b: 0, a: 1}
+  _invalidColor: {r: 1, g: 0, b: 0, a: 1}
+--- !u!114 &708868655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708868646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e6f3810fe28f5b46b1f0e8dbc8bf2af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _lightningTelegraphPrefab: {fileID: 2537048332181777339, guid: 40a74c2a4fee20047a05d7cd8de55add, type: 3}
+  _lightningSpellPrefab: {fileID: 2125456223}
+  _castActionKey:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Cast Action Key
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 16c93c1d-3d27-4b6d-a484-dbead9d55aee
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  _castKey: 116
+  _cancelKey: 324
+  _lightningLength: 15
+  _useNewInputSystem: 0
+  _telegraphHeightOffset: 0.05
+  _lightningSpellHeightOffset: 0.01
+  _playerOffset: 4
+  _validColor: {r: 0.5, g: 0.8, b: 1, a: 0.7}
   _invalidColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &1237044680
 GameObject:
