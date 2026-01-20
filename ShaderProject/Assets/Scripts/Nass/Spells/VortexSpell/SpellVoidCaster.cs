@@ -90,7 +90,7 @@ public class SpellVoidCaster : MonoBehaviour
 
         _currentState = CastState.Previewing;
         _targetPosition = GetGroundPosition(_telegraphHeightOffset, out _hasValidGroundHit);
-        _currentTelegraph = Instantiate(_telegraphPrefab, _targetPosition, Quaternion.identity);
+        _currentTelegraph = Instantiate(_telegraphPrefab, _targetPosition, Quaternion.Euler(90, 0 ,0));
 
         Renderer renderer = _currentTelegraph.GetComponentInChildren<Renderer>();
         if (renderer != null)
