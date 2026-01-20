@@ -113,7 +113,7 @@ public class SpellFlameCaster : MonoBehaviour
 
         if (_targetDirection != Vector3.zero)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(_targetDirection) * Quaternion.Euler(0, 180f, 0);
+            Quaternion targetRotation = Quaternion.LookRotation(_targetDirection) * Quaternion.Euler(90, 180, 45);
             _currentTelegraph.transform.rotation = targetRotation;
         }
 
