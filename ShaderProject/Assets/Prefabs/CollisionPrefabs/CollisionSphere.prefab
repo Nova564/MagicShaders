@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 6923842007798640369}
   - component: {fileID: 123526324818427783}
   - component: {fileID: 7135600285248306831}
-  - component: {fileID: 5926352013313237801}
   m_Layer: 0
   m_Name: CollisionSphere
   m_TagString: Untagged
@@ -137,26 +136,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _collisionParticle: {fileID: 0}
   _launchParticle: {fileID: 0}
---- !u!1773428102 &5926352013313237801
-ParentConstraint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6437110809580174631}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Weight: 1
-  m_TranslationAtRest: {x: 0, y: 0, z: 0}
-  m_RotationAtRest: {x: 0, y: 0, z: 0}
-  m_TranslationOffsets: []
-  m_RotationOffsets: []
-  m_AffectTranslationX: 0
-  m_AffectTranslationY: 0
-  m_AffectTranslationZ: 0
-  m_AffectRotationX: 0
-  m_AffectRotationY: 0
-  m_AffectRotationZ: 0
-  m_Active: 0
-  m_IsLocked: 1
-  m_Sources: []
