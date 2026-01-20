@@ -52,14 +52,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4045997422068919399, guid: 6c5038dd2d680184ab75e4a09168dda4, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4578931344233998939, guid: 6c5038dd2d680184ab75e4a09168dda4, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 5831994372136728827, guid: 6c5038dd2d680184ab75e4a09168dda4, type: 3}
       propertyPath: m_Name
       value: Trapezoid Variant
