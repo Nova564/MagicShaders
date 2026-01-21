@@ -140,7 +140,7 @@ public class IceSpell : MonoBehaviour
 
         if (_targetEnemy.CompareTag("Enemy"))
         {
-            Debug.Log($"Ice chain hit enemy {_targetEnemy.name} for {_damage} damage");
+            Debug.Log($"Ice spell hit enemy {_targetEnemy.name} for {_damage} damage");
         }
 
         _hasDamaged = true;

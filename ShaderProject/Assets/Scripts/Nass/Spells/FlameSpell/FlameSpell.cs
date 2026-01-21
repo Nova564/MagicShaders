@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class FlameSpell : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class FlameSpell : MonoBehaviour
     [SerializeField] private float _activationDuration = 3f;
     [SerializeField] private float _damagePerSecond = 75f;
 
-    private Material _flameMaterial;
+    private List<Material> _flameMaterials = new List<Material>();
     private float _currentCharge;
     private bool _isActivated;
     private float _activationTime;
@@ -25,15 +26,15 @@ public class FlameSpell : MonoBehaviour
 
             Material instanceMat = new Material(renderer.sharedMaterial);
             renderer.material = instanceMat;
-            _flameMaterial = instanceMat;
+            _flameMaterials.Add(instanceMat);
 
-            if (_flameMaterial.HasProperty("_Intensity"))
+            if (instanceMat.HasProperty("_Intensity"))
             {
-                _flameMaterial.SetFloat("_Intensity", 0f);
+                instanceMat.SetFloat("_Intensity", 0f);
             }
-            if (_flameMaterial.HasProperty("_ChargeAmount"))
+            if (instanceMat.HasProperty("_ChargeAmount"))
             {
-                _flameMaterial.SetFloat("_ChargeAmount", 0f);
+                instanceMat.SetFloat("_ChargeAmount", 0f);
             }
         }
     }
@@ -63,19 +64,22 @@ public class FlameSpell : MonoBehaviour
 
     void UpdateShaderProperties(float charge)
     {
-        if (_flameMaterial != null)
+        foreach (Material material in _flameMaterials)
         {
-            if (_flameMaterial.HasProperty("_ChargeAmount"))
+            if (material != null)
             {
-                _flameMaterial.SetFloat("_ChargeAmount", charge);
-            }
-            if (_flameMaterial.HasProperty("_Intensity"))
-            {
-                _flameMaterial.SetFloat("_Intensity", Mathf.Lerp(0f, 5f, charge));
-            }
-            if (_flameMaterial.HasProperty("_EmissionStrength"))
-            {
-                _flameMaterial.SetFloat("_EmissionStrength", Mathf.Lerp(1f, 10f, charge));
+                if (material.HasProperty("_ChargeAmount"))
+                {
+                    material.SetFloat("_ChargeAmount", charge);
+                }
+                if (material.HasProperty("_Intensity"))
+                {
+                    material.SetFloat("_Intensity", Mathf.Lerp(0f, 5f, charge));
+                }
+                if (material.HasProperty("_EmissionStrength"))
+                {
+                    material.SetFloat("_EmissionStrength", Mathf.Lerp(1f, 10f, charge));
+                }
             }
         }
     }
@@ -99,6 +103,10 @@ public class FlameSpell : MonoBehaviour
 
     void OnDestroy()
     {
-        if (_flameMaterial != null) DestroyImmediate(_flameMaterial);
+        foreach (Material material in _flameMaterials)
+        {
+            if (material != null) DestroyImmediate(material);
+        }
+        _flameMaterials.Clear();
     }
 }

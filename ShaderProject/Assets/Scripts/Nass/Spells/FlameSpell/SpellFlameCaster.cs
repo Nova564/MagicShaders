@@ -17,7 +17,7 @@ public class SpellFlameCaster : MonoBehaviour
     [SerializeField] private bool _useNewInputSystem = false;
     [SerializeField] private float _telegraphHeightOffset = 0.05f;
     [SerializeField] private float _flameSpellHeightOffset = 0.01f;
-    [SerializeField] private float _playerOffset = 1f; 
+    [SerializeField] private float _playerOffset = 1f;
 
     [Header("Visual Feedback")]
     [SerializeField] private Color _validColor = Color.green;

@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: InnerLayer
+  m_Shader: {fileID: 4800000, guid: 5b2f359d11662494ba228937f3f7b313, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _DistortionTex:
+        m_Texture: {fileID: 2800000, guid: a1911791d0adef04d98cfbeb15a0eb4a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 30aa7858588e65c46a862620e7246016, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: 6d6107988df7cbe45be94f54f8b4d8ef, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ChargeAmount: 1
+    - _CoreSize: 0.8
+    - _Dissolve: 0.41
+    - _Distortion: 0.11
+    - _DistortionFalloff: 1.69
+    - _DistortionRange: 10
+    - _DistortionSpeed: 0.06
+    - _DistortionStrength: 1
+    - _EdgeFade: 0.15
+    - _EdgeSharpness: 3
+    - _EmissionIntensity: 3.7
+    - _EmissionStrength: 14.5
+    - _FlameEdgeSoftness: 0.1
+    - _FlameHeight: 0.5
+    - _FlameSpeed: 2
+    - _FlickerAmount: 0
+    - _FlickerSpeed: 0
+    - _HeatDistortion: 0.217
+    - _Intensity: 2.4
+    - _NoiseOctaves: 3
+    - _NoiseScale: 3
+    - _Turbulence: 0.97
+    - _TurbulenceSpeed: 2
+    m_Colors:
+    - _CoreColor: {r: 1, g: 0, b: 0.048192978, a: 1}
+    - _EdgeColor: {r: 0.96981126, g: 0.08839993, b: 0, a: 1}
+    - _FlameColorCore: {r: 8, g: 2, b: 0, a: 1}
+    - _FlameColorEdge: {r: 4, g: 1.5, b: 0, a: 1}
+    - _FlameColorMid: {r: 6, g: 3, b: 0.5, a: 1}
+    - _MidColor: {r: 1, g: 0.08823529, b: 0, a: 1}
+    - _TipColor: {r: 1, g: 0.246905, b: 0, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
