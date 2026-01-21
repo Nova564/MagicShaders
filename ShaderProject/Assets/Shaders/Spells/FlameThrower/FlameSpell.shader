@@ -9,21 +9,18 @@ Shader "Unlit/FlameSpell"
         
         [Header(Noise Textures)]
         _NoiseTex ("Noise Texture", 2D) = "white" {}
-        _DistortionTex ("Distortion Texture", 2D) = "white" {}
         
-        [Header(Animation)]
+        [Header(Flame animation render)]
         _FlameSpeed ("Flame Speed", Float) = 3.0
-        _TurbulenceSpeed ("Turbulence Speed", Float) = 2.0
         
-        [Header(Intensity)]
+        [Header(Flame Intensity)]
         _Intensity ("Overall Intensity", Range(0, 10)) = 8.0
         _EmissionStrength ("Emission Strength", Range(1, 30)) = 15.0
         _ChargeAmount ("Charge Amount", Range(0, 1)) = 1.0
         
-        [Header(Flame Shape)]
+        [Header(Flame Settings)]
         _FlameHeight ("Flame Height Power", Range(0.5, 3)) = 1.5
         _NoiseScale ("Noise Scale", Float) = 4.0
-        _Distortion ("Distortion Amount", Range(0, 1)) = 0.4
         _EdgeSharpness ("Edge Sharpness", Range(0.01, 0.3)) = 0.08
         
     }
@@ -71,17 +68,13 @@ Shader "Unlit/FlameSpell"
             
             sampler2D _NoiseTex;
             float4 _NoiseTex_ST;
-            sampler2D _DistortionTex;
-            float4 _DistortionTex_ST;
             
             float _FlameSpeed;
-            float _TurbulenceSpeed;
             float _Intensity;
             float _EmissionStrength;
             float _ChargeAmount;
             float _FlameHeight;
             float _NoiseScale;
-            float _Distortion;
             float _EdgeSharpness;
 
             v2f vert (appdata v)
@@ -98,12 +91,8 @@ Shader "Unlit/FlameSpell"
             {
                 float time = _Time.y;
                 
-                float2 distortUV = i.uv * 3.0 + float2(0, time * _TurbulenceSpeed);
-                float distortionNoise = tex2D(_DistortionTex, distortUV).r - 0.5;
-                float2 uv = i.uv + float2(distortionNoise * _Distortion, 0);
-                
-                float2 flameUV1 = uv * _NoiseScale + float2(0, time * _FlameSpeed);
-                float2 flameUV2 = uv * _NoiseScale * 1.5 + float2(0.5, time * _FlameSpeed * 1.3);
+                float2 flameUV1 = i.uv * _NoiseScale + float2(0, time * _FlameSpeed);
+                float2 flameUV2 = i.uv * _NoiseScale * 1.5 + float2(0.5, time * _FlameSpeed * 1.3);
                 
                 float noise1 = tex2D(_NoiseTex, flameUV1).r;
                 float noise2 = tex2D(_NoiseTex, flameUV2).r;
