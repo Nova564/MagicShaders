@@ -139,11 +139,12 @@ public class SpellLightningCaster : MonoBehaviour
             Destroy(_currentTelegraph);
         }
 
-        Vector3 lightningPosition = transform.position + _targetDirection * _playerOffset + Vector3.up * _lightningSpellHeightOffset;
-        Quaternion lightningRotation = Quaternion.LookRotation(_targetDirection);
-        GameObject lightningSpell = Instantiate(_lightningSpellPrefab, lightningPosition, lightningRotation);
+        Vector3 startPosition = transform.position + _targetDirection * _playerOffset + Vector3.up * _lightningSpellHeightOffset;
+        Vector3 centerPosition = startPosition + _targetDirection * (_lightningLength * 0.5f);
+        Quaternion lightningRotation = Quaternion.LookRotation(_targetDirection) * Quaternion.Euler(90f, 0f, 0f);
 
-        lightningSpell.transform.localScale = new Vector3(1f, 1f, _lightningLength);
+        GameObject lightningSpell = Instantiate(_lightningSpellPrefab, centerPosition, lightningRotation);
+        lightningSpell.transform.localScale = new Vector3(0.3f, _lightningLength * 0.5f, 0.3f);
 
         LightningSpell spellComponent = lightningSpell.GetComponent<LightningSpell>();
         if (spellComponent != null)

@@ -7,9 +7,10 @@ public class LightningSpell : MonoBehaviour
     [SerializeField] private float _fadeDuration = 0.5f;
     [SerializeField] private AnimationCurve _fadeCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
     [SerializeField] private float _damage = 150f;
+    [SerializeField] private float _propagationSpeed = 50f; 
 
     [Header("Visual Effects")]
-    [SerializeField] private float _maxIntensity = 10f;
+    [SerializeField] private float _maxIntensity = 20f; 
     [SerializeField] private float _flickerSpeed = 20f;
 
     private Material _lightningMaterial;
@@ -37,6 +38,10 @@ public class LightningSpell : MonoBehaviour
             {
                 _lightningMaterial.SetFloat("_EmissionStrength", _maxIntensity);
             }
+            if (_lightningMaterial.HasProperty("_PropagationProgress"))
+            {
+                _lightningMaterial.SetFloat("_PropagationProgress", 0f);
+            }
         }
     }
 
@@ -46,12 +51,39 @@ public class LightningSpell : MonoBehaviour
         _activationTime = Time.time;
         _currentLength = length;
         _hasDamaged = false;
+        StartCoroutine(PropagationAnimation());
         StartCoroutine(FadeOutAnimation());
         StartCoroutine(DamageEnemies());
     }
 
+    private IEnumerator PropagationAnimation()
+    {
+        float elapsed = 0f;
+        float propagationDuration = _currentLength / _propagationSpeed;
+
+        while (elapsed < propagationDuration)
+        {
+            elapsed += Time.deltaTime;
+            float progress = Mathf.Clamp01(elapsed / propagationDuration);
+
+            if (_lightningMaterial != null && _lightningMaterial.HasProperty("_PropagationProgress"))
+            {
+                _lightningMaterial.SetFloat("_PropagationProgress", progress);
+            }
+
+            yield return null;
+        }
+
+        if (_lightningMaterial != null && _lightningMaterial.HasProperty("_PropagationProgress"))
+        {
+            _lightningMaterial.SetFloat("_PropagationProgress", 1f);
+        }
+    }
+
     private IEnumerator FadeOutAnimation()
     {
+        yield return new WaitForSeconds(0.1f);
+
         float elapsed = 0f;
 
         while (elapsed < _fadeDuration)
@@ -84,7 +116,6 @@ public class LightningSpell : MonoBehaviour
             {
                 if (hit.collider.CompareTag("Enemy"))
                 {
-                    // santé système dégat unique au contact
                     Debug.Log($"Lightning hit enemy {hit.collider.name} for {_damage} damage");
                 }
             }
