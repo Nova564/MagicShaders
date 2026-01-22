@@ -84,7 +84,7 @@ public class SpellVoidCaster : MonoBehaviour
         }
     }
 
-    void ActivateTelegraph()
+    public void ActivateTelegraph()
     {
         if (_telegraphPrefab == null) return;
 
@@ -123,6 +123,8 @@ public class SpellVoidCaster : MonoBehaviour
     public void CastSpell()
     {
         if (_voidTrapPrefab == null) return;
+
+        if (_currentState != CastState.Previewing || !_isValidPosition || !_hasValidGroundHit) return;
 
         if (_currentTelegraph != null)
         {

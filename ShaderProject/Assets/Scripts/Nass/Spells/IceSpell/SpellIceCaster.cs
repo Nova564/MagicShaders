@@ -90,7 +90,7 @@ public class SpellIceCaster : MonoBehaviour
         }
     }
 
-    void ActivateTelegraph()
+    public void ActivateTelegraph()
     {
         if (_iceTelegraphPrefab == null)
         {
@@ -202,6 +202,8 @@ public class SpellIceCaster : MonoBehaviour
             Debug.LogError("No target enemy");
             return;
         }
+
+        if (_currentState != CastState.Previewing || !_isValidPosition) return;
 
         if (_currentTelegraph != null)
         {

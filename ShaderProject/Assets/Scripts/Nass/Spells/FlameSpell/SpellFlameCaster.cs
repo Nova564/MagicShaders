@@ -34,12 +34,12 @@ public class SpellFlameCaster : MonoBehaviour
     private Camera _mainCamera;
     private Vector3 _targetDirection;
     private bool _isValidPosition;
-    private PlayerMove _playerMovement; 
+    private PlayerMove _playerMovement;
 
     void Start()
     {
         _mainCamera = Camera.main;
-        _playerMovement = GetComponent<PlayerMove>(); 
+        _playerMovement = GetComponent<PlayerMove>();
 
         if (_useNewInputSystem && _castActionKey.action != null)
         {
@@ -87,7 +87,7 @@ public class SpellFlameCaster : MonoBehaviour
         }
     }
 
-    void ActivateTelegraph()
+    public void ActivateTelegraph()
     {
         if (_flameTelegraphPrefab == null) return;
 
@@ -131,6 +131,8 @@ public class SpellFlameCaster : MonoBehaviour
     public void CastSpell()
     {
         if (_flameSpellPrefab == null) return;
+        if (_currentState != CastState.Previewing) return;
+
         Vector3 finalDirection = _targetDirection;
 
         if (_currentTelegraph != null)

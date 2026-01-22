@@ -111,7 +111,7 @@ public class SpellLightningCaster : MonoBehaviour
         }
     }
 
-    void ActivateTelegraph()
+    public void ActivateTelegraph()
     {
         if (_telegraphPrefab == null)
         {
@@ -158,6 +158,8 @@ public class SpellLightningCaster : MonoBehaviour
             Debug.LogError("Lightning  prefab null");
             return;
         }
+
+        if (_currentState != CastState.Previewing || !_isValidPosition || !_hasValidGroundHit) return;
 
         if (_currentTelegraph != null)
         {
