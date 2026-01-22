@@ -9651,11 +9651,24 @@ MonoBehaviour:
     m_Bits: 4294967295
   _useNewInputSystem: 0
   _telegraphHeightOffset: 0.05
-  _lightningSpellHeightOffset: 4
-  _lightningSpawnYOffset: 4
+  _lightningSpellHeightOffset: 2
+  _lightningSpawnYOffset: 1
   _spellLifetime: 3
   _validColor: {r: 0.5, g: 0.8, b: 1, a: 0.7}
   _invalidColor: {r: 1, g: 0, b: 0, a: 1}
+  _enableCastShake: 1
+  _castShakeIntensity: 5
+  _castShakeDuration: 0.2
+  _enableImpactShake: 1
+  _impactShakeDelay: 0.5
+  _impactShakeIntensity: 25
+  _impactShakeDuration: 0.4
+  _impactShakeCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &1278503240
 MonoBehaviour:
   m_ObjectHideFlags: 0

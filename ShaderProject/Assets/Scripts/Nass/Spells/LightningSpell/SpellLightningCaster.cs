@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class SpellLightningCaster : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class SpellLightningCaster : MonoBehaviour
     [SerializeField] private bool _useNewInputSystem = false;
     [SerializeField] private float _telegraphHeightOffset = 0.05f;
     [SerializeField] private float _lightningSpellHeightOffset = 0.01f;
-    [SerializeField] private float _lightningSpawnYOffset = 4f; 
+    [SerializeField] private float _lightningSpawnYOffset = 4f;
 
     [Header("Spell Duration")]
     [SerializeField] private float _spellLifetime = 3f;
@@ -27,6 +28,18 @@ public class SpellLightningCaster : MonoBehaviour
     [Header("Visual Feedback")]
     [SerializeField] private Color _validColor = new Color(0.5f, 0.8f, 1f, 0.7f);
     [SerializeField] private Color _invalidColor = Color.red;
+
+    [Header("Camera Shake - Cast")]
+    [SerializeField] private bool _enableCastShake = true;
+    [SerializeField] private float _castShakeIntensity = 1f;
+    [SerializeField] private float _castShakeDuration = 0.1f;
+
+    [Header("Camera Shake - Impact")]
+    [SerializeField] private bool _enableImpactShake = true;
+    [SerializeField] private float _impactShakeDelay = 0.1f;
+    [SerializeField] private float _impactShakeIntensity = 6f;
+    [SerializeField] private float _impactShakeDuration = 0.4f;
+    [SerializeField] private AnimationCurve _impactShakeCurve;
 
     private enum CastState { Idle, Previewing }
     private CastState _currentState = CastState.Idle;
@@ -46,6 +59,11 @@ public class SpellLightningCaster : MonoBehaviour
         {
             _castActionKey.action.Enable();
             _castActionKey.action.performed += OnCastPressed;
+        }
+
+        if (_impactShakeCurve == null || _impactShakeCurve.length == 0)
+        {
+            _impactShakeCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
         }
     }
 
@@ -97,7 +115,7 @@ public class SpellLightningCaster : MonoBehaviour
     {
         if (_telegraphPrefab == null)
         {
-            Debug.LogError("Telegraph prefab is null");
+            Debug.LogError("Telegraph prefab null");
             return;
         }
 
@@ -132,13 +150,18 @@ public class SpellLightningCaster : MonoBehaviour
     {
         if (_lightningSpellPrefab == null)
         {
-            Debug.LogError("Lightning  prefab  null");
+            Debug.LogError("Lightning  prefab null");
             return;
         }
 
         if (_currentTelegraph != null)
         {
             Destroy(_currentTelegraph);
+        }
+
+        if (_enableCastShake && CameraShakeManager.Instance != null)
+        {
+            CameraShakeManager.Instance.ShakeQuick(_castShakeIntensity, _castShakeDuration);
         }
 
         Vector3 groundPosition = GetGroundPosition(_lightningSpellHeightOffset, out _);
@@ -155,11 +178,26 @@ public class SpellLightningCaster : MonoBehaviour
             }
         }
 
+        if (_enableImpactShake)
+        {
+            StartCoroutine(TriggerImpactShake());
+        }
+
         Destroy(lightningSpell, _spellLifetime);
 
         _currentState = CastState.Idle;
         _isValidPosition = false;
         _hasValidGroundHit = false;
+    }
+
+    private IEnumerator TriggerImpactShake()
+    {
+        yield return new WaitForSeconds(_impactShakeDelay);
+
+        if (CameraShakeManager.Instance != null)
+        {
+            CameraShakeManager.Instance.ShakeCamera(_impactShakeIntensity, _impactShakeDuration, _impactShakeCurve);
+        }
     }
 
     Vector3 GetGroundPosition(float heightOffset, out bool hitGround)
