@@ -23,6 +23,10 @@ Shader "Unlit/FlameSpell"
         _NoiseScale ("Noise Scale", Float) = 4.0
         _EdgeSharpness ("Edge Sharpness", Range(0.01, 0.3)) = 0.08
         
+        [Header(Opacity Settings)]
+        _OpacityMultiplier ("Opacity Multiplier", Range(1, 5)) = 2.5
+        _MinOpacity ("Minimum Opacity", Range(0, 1)) = 0.3
+        
     }
     
     SubShader
@@ -76,6 +80,8 @@ Shader "Unlit/FlameSpell"
             float _FlameHeight;
             float _NoiseScale;
             float _EdgeSharpness;
+            float _OpacityMultiplier;
+            float _MinOpacity;
 
             v2f vert (appdata v)
             {
@@ -128,8 +134,10 @@ Shader "Unlit/FlameSpell"
                 float alpha = flameMask * chargeMultiplier;
                 alpha = smoothstep(0.0, _EdgeSharpness, alpha);
                 
-                //éviter trous
-                alpha = saturate(alpha * 1.5);
+                alpha = saturate(alpha * _OpacityMultiplier);
+                
+                float centerOpacity = saturate(coreZone * _MinOpacity);
+                alpha = max(alpha, centerOpacity);
                 
                 fixed4 col = fixed4(emission, alpha);
                 

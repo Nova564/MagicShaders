@@ -23,7 +23,7 @@ public class PlayerMove : MonoBehaviour
     private const float mouseStillThreshold = 0.05f;
     private const float mouseStillDelay = 0.1f;
     private bool _jumpPressed = false;
-    private bool _movementEnabled = true; // Nouveau flag pour contrôler le mouvement
+    private bool _movementEnabled = true;
 
     void Start()
     {
@@ -46,7 +46,7 @@ public class PlayerMove : MonoBehaviour
 
     void StartMove(InputAction.CallbackContext ctx)
     {
-        if (!_movementEnabled) return; // Bloquer si mouvement désactivé
+        if (!_movementEnabled) return; 
 
         if (_animator.GetBool("IsRunning"))
         {
@@ -75,7 +75,7 @@ public class PlayerMove : MonoBehaviour
 
     void StartJump(InputAction.CallbackContext ctx)
     {
-        if (!_movementEnabled) return; // Bloquer si mouvement désactivé
+        if (!_movementEnabled) return; 
 
         if (_characterController.isGrounded)
         {
@@ -87,7 +87,7 @@ public class PlayerMove : MonoBehaviour
 
     void StartSprint(InputAction.CallbackContext ctx)
     {
-        if (!_movementEnabled) return; // Bloquer si mouvement désactivé
+        if (!_movementEnabled) return; 
         _animator.SetBool("IsRunning", true);
     }
 
@@ -107,7 +107,6 @@ public class PlayerMove : MonoBehaviour
     {
         if (!_movementEnabled)
         {
-            // Si le mouvement est désactivé, réinitialiser la direction
             _direction = Vector3.zero;
             finalDirection = Vector3.zero;
         }

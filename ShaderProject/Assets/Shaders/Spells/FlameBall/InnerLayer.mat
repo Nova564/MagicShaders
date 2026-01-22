@@ -56,8 +56,10 @@ Material:
     - _FlickerSpeed: 0
     - _HeatDistortion: 0.217
     - _Intensity: 2.4
+    - _MinOpacity: 1
     - _NoiseOctaves: 3
     - _NoiseScale: 3
+    - _OpacityMultiplier: 5
     - _Turbulence: 0.97
     - _TurbulenceSpeed: 2
     m_Colors:
