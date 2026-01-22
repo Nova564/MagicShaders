@@ -37,8 +37,8 @@ public class Entity : MonoBehaviour
     public void TakeDamage(float damage)
     {
         Health -= damage;
-        OnDamageTaken?.Invoke();
         UpdateHealth();
+        OnDamageTaken?.Invoke();
         if (soundeffectdamage != null)
         {
             SoundSystem.Instance.PlaySFX(soundeffectdamage, 0.3f);
@@ -83,6 +83,7 @@ public class Entity : MonoBehaviour
     {
         if (Health <= 0)
         {
+            Debug.Log("Enemy DIED");
             Health = 0;
             OnDeath?.Invoke();
         }

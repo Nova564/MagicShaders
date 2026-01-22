@@ -84,7 +84,6 @@ public class PlayerMove : MonoBehaviour
     
     void StartSprint(InputAction.CallbackContext ctx)
     {
-        _animator.SetBool("IsWalking", false);
         _animator.SetBool("IsRunning", true);
     }
     void StopSprint(InputAction.CallbackContext ctx)

@@ -23,7 +23,7 @@ public class EnemyControl : MonoBehaviour
     private float EAtkRange;
     private float EAggroRange;
     private bool EIsBoss;
-    private bool EIsDead;
+    [SerializeField] private bool EIsDead;
     bool isBattle;
     private Transform ETarget;
 
@@ -218,7 +218,6 @@ public class EnemyControl : MonoBehaviour
                 EAnimator.SetBool("IsDead", true);
                 EAnimator.SetTrigger("OnDeath");
             }
-
             Destroy(gameObject, 0.8f);
         }
         else
