@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviour
         if (Time.time > nextAtk5)
         {
             _moveAnimator.SetTrigger("VortexAttack");
-            nextAtk4 = Time.time + AtkCoolDown5;
+            nextAtk5 = Time.time + AtkCoolDown5;
             LaunchVortexAttack();
         }
     }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8632345742222801409}
   - component: {fileID: 5035161380587856066}
   - component: {fileID: 3560189080074041989}
+  - component: {fileID: 2964262816290597005}
   m_Layer: 0
   m_Name: Systems
   m_TagString: Untagged
@@ -59,3 +60,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sfxVolume: 1
   musicVolume: 1
+--- !u!114 &2964262816290597005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3481937177074401622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a9554a43dd13d34290031ee2a611fb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
