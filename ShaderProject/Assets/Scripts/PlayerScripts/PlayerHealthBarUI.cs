@@ -34,7 +34,7 @@ public class PlayerHealthBarUI : MonoBehaviour
             {
                 _atkCoolDown.Add(new AtkCoolDown());
             }
-            _playerController.OnCoolDownAtk += SetCoolDownAtk;
+            //_playerController.OnCoolDownAtk += SetCoolDownAtk;
         }
 
         if(_playerinput == null && FindFirstObjectByType<PlayerMove>() != null)
@@ -59,7 +59,7 @@ public class PlayerHealthBarUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        _playerController.OnCoolDownAtk -= SetCoolDownAtk;
+       //_playerController.OnCoolDownAtk -= SetCoolDownAtk;
     }
 
     void UpdateHB()

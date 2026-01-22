@@ -24,18 +24,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject VortexPrefab;
     [SerializeField] private List<AudioClip> audioSource;
     [SerializeField] Animator _moveAnimator;
-    [SerializeField] Animator _eventAnimator;
     [SerializeField] float AtkCoolDown = 1.0f;
     [SerializeField] float AtkCoolDown2 = 4.0f;
     [SerializeField] float AtkCoolDown3 = 10.0f;
     [SerializeField] float AtkCoolDown4 = 50.0f;
+    [SerializeField] float AtkCoolDown5 = 50.0f;
     [SerializeField] Transform _handTransform;
     private ConstraintSource _constraintSource;
     float nextAtk;
     float nextAtk2;
     float nextAtk3;
     float nextAtk4;
-    public event Action<float, int> OnCoolDownAtk;
+    float nextAtk5;
+    public static event Action<float, int> OnCoolDownAtk;
     private List<Projectile> _playerProjectiles = new List<Projectile>();
     [SerializeField] List<Quest> _ListQuests = new List<Quest>();
     public List <bool> IsBattle { get { return isBattle; } set { isBattle = value; } }
@@ -52,8 +53,11 @@ public class PlayerController : MonoBehaviour
         _IceAttack.action.performed += Attack4;
         _vortexAttack.action.performed += Attack5;
         
-        _constraintSource = new ConstraintSource();
-        _constraintSource.sourceTransform = _handTransform;
+        _constraintSource = new ConstraintSource
+        {
+            sourceTransform = _handTransform,
+            weight = 1f
+        };
     }
 
     void OnDestroy()
@@ -69,9 +73,8 @@ public class PlayerController : MonoBehaviour
         if (Time.time > nextAtk)
         {
             _moveAnimator.SetTrigger("AutoAttack");
-            _eventAnimator.SetTrigger("AutoAttack");
             nextAtk = Time.time + AtkCoolDown;
-            OnCoolDownAtk?.Invoke(AtkCoolDown, 0);
+            LaunchAutoAttack();
         }
     }
 
@@ -80,10 +83,8 @@ public class PlayerController : MonoBehaviour
         if (Time.time > nextAtk2)
         {
             _moveAnimator.SetTrigger("FireAttack");
-            _eventAnimator.SetTrigger("FireAttack");
             nextAtk2 = Time.time + AtkCoolDown2;
-            OnCoolDownAtk?.Invoke(AtkCoolDown2, 1);
-            
+            LaunchFireAttack();
         }
     }
     
@@ -92,9 +93,8 @@ public class PlayerController : MonoBehaviour
         if (Time.time > nextAtk3)
         {
             _moveAnimator.SetTrigger("LightningAttack");
-            _eventAnimator.SetTrigger("LightningAttack");
             nextAtk3 = Time.time + AtkCoolDown3;
-            OnCoolDownAtk?.Invoke(AtkCoolDown3, 2);
+            LaunchLightningAttack();
         }
     }
     
@@ -103,121 +103,104 @@ public class PlayerController : MonoBehaviour
         if (Time.time > nextAtk4)
         {
             _moveAnimator.SetTrigger("IceAttack");
-            _eventAnimator.SetTrigger("IceAttack");
             nextAtk4 = Time.time + AtkCoolDown4;
-            OnCoolDownAtk?.Invoke(AtkCoolDown4, 3);
-            
+            LaunchIceAttack();
         }
     }
     
     void Attack5(InputAction.CallbackContext ctx)
     {
-        if (Time.time > nextAtk4)
+        if (Time.time > nextAtk5)
         {
             _moveAnimator.SetTrigger("VortexAttack");
-            _eventAnimator.SetTrigger("VortexAttack");
-            nextAtk4 = Time.time + AtkCoolDown4;
-            OnCoolDownAtk?.Invoke(AtkCoolDown4, 3);
+            nextAtk4 = Time.time + AtkCoolDown5;
+            LaunchVortexAttack();
         }
     }
 
-    public void LauchAutoAttack()
+    public void LaunchAutoAttack()
     {
         Vector3 spawnPosition = transform.position;
         spawnPosition.y += YProjOffSet;
         Quaternion spawnRotation = transform.rotation;
         GameObject Hitbox = Instantiate(FlameThrowerPrefab, spawnPosition, spawnRotation);
-        //Hitbox.transform.SetParent(this.transform);
-        Projectile projectile = new Projectile();
-        projectile.projectile = Hitbox;
-        projectile.Direction = transform.forward.normalized;
-        projectile.rotation = transform.rotation;
-        projectile.projectileSpeed = 12.0f;
-        projectile.Damage = _playerEntity.Damage * 1.5f;
-        projectile.IsPlayer = _playerEntity.IsPlayer;
-        Hitbox.GetComponent<ProjectileStats>().projectile = projectile;
-        _playerProjectiles.Add(projectile);
+        CreateProjectile(Hitbox, 7, 1.5f, 0.3f, AtkCoolDown, 0);
+        ParentConstraint constraint = Hitbox.AddComponent<ParentConstraint>();
+        constraint.AddSource(_constraintSource);
+        constraint.locked = true;
+        constraint.constraintActive = true;
     }
     
-    public void LauchFireAttack()
+    public void LaunchFireAttack()
     {
         Vector3 spawnPosition = transform.position;
         spawnPosition.y += YProjOffSet;
         Quaternion spawnRotation = transform.rotation;
         GameObject Hitbox = Instantiate(FlameThrowerPrefab, spawnPosition, spawnRotation);
-        //Hitbox.transform.SetParent(this.transform);
-        Projectile projectile = new Projectile();
-        projectile.projectile = Hitbox;
-        projectile.Direction = transform.forward.normalized;
-        projectile.rotation = transform.rotation;
-        projectile.projectileSpeed = 12.0f;
-        projectile.Damage = _playerEntity.Damage * 1.5f;
-        projectile.IsPlayer = _playerEntity.IsPlayer;
-        Hitbox.GetComponent<ProjectileStats>().projectile = projectile;
-        _playerProjectiles.Add(projectile);
+        CreateProjectile(Hitbox, 8, 1.5f, 0.85f, AtkCoolDown2, 1);
+        ParentConstraint constraint = Hitbox.AddComponent<ParentConstraint>();
+        constraint.AddSource(_constraintSource);
+        constraint.locked = true;
+        constraint.constraintActive = true;
     }
     
-    public void LauchLightningAttack()
+    public void LaunchLightningAttack()
     {
         Vector3 spawnPosition = transform.position;
         spawnPosition.y += YProjOffSet;
         Quaternion spawnRotation = transform.rotation;
         GameObject Hitbox = Instantiate(LightningBoltPrefab, spawnPosition, spawnRotation);
-        //Hitbox.transform.SetParent(this.transform);
-        Projectile projectile = new Projectile();
-        projectile.projectile = Hitbox;
-        projectile.Direction = transform.forward.normalized;
-        projectile.rotation = transform.rotation;
-        projectile.projectileSpeed = 12.0f;
-        projectile.Damage = _playerEntity.Damage * 2.0f;
-        projectile.IsPlayer = _playerEntity.IsPlayer;
-        Hitbox.GetComponent<ProjectileStats>().projectile = projectile;
-        _playerProjectiles.Add(projectile);
+        CreateProjectile(Hitbox, 8, 2, 0.7f, AtkCoolDown3, 2);
+        ParentConstraint constraint = Hitbox.AddComponent<ParentConstraint>();
+        constraint.AddSource(_constraintSource);
+        constraint.locked = true;
+        constraint.constraintActive = true;
     }
     
-    public void LauchIceAttack()
+    public void LaunchIceAttack()
     {
-        Vector3 offset = transform.forward * 1.0f;
-        Vector3 spawnPosition = transform.position + offset;
+        Vector3 spawnPosition = transform.position;
         spawnPosition.y += YProjOffSet;
         Quaternion spawnRotation = transform.rotation;
         GameObject Hitbox = Instantiate(IcePrefab, spawnPosition, spawnRotation);
-        Projectile projectile = new Projectile();
-        projectile.projectile = Hitbox;
-        projectile.Direction = transform.forward.normalized;
-        projectile.rotation = transform.rotation;
-        projectile.projectileSpeed = 5.0f;
-        projectile.Damage = _playerEntity.Damage * 10.0f;
-        projectile.IsPlayer = _playerEntity.IsPlayer;
-        Hitbox.GetComponent<ProjectileStats>().projectile = projectile;
-        _playerProjectiles.Add(projectile);
+        CreateProjectile(Hitbox, 8, 10, 1.0f, AtkCoolDown4, 3);
+        ParentConstraint constraint = Hitbox.AddComponent<ParentConstraint>();
+        constraint.AddSource(_constraintSource);
+        constraint.locked = true;
+        constraint.constraintActive = true;
     }
-    
-    public void LauchVortexAttack()
+
+    public void LaunchVortexAttack()
     {
         Vector3 offset = transform.forward * 1.0f;
         Vector3 spawnPosition = transform.position + offset;
         spawnPosition.y += YProjOffSet;
         Quaternion spawnRotation = transform.rotation;
         GameObject Hitbox = Instantiate(VortexPrefab, _handTransform.position, spawnRotation);
-        Projectile projectile = new Projectile();
-        projectile.projectile = Hitbox;
-        projectile.Direction = transform.forward.normalized;
-        projectile.rotation = transform.rotation;
-        projectile.projectileSpeed = 5.0f;
-        projectile.Damage = _playerEntity.Damage * 10.0f;
-        projectile.IsPlayer = _playerEntity.IsPlayer;
-        Hitbox.GetComponent<ProjectileStats>().projectile = projectile;
-        _playerProjectiles.Add(projectile);
-        if (Hitbox.GetComponent<ParentConstraint>())
-        {
-            ParentConstraint constraint  =  Hitbox.GetComponent<ParentConstraint>();
-            constraint.AddSource(_constraintSource);
-            constraint.constraintActive = true;
-            constraint.locked = true;
-        }
+        CreateProjectile(Hitbox, 8, 10, 1.35f, AtkCoolDown5, 4);
+        ParentConstraint constraint = Hitbox.AddComponent<ParentConstraint>();
+        constraint.AddSource(_constraintSource);
+        constraint.locked = true;
+        constraint.constraintActive = true;
+        
     }
-    
+
+    void CreateProjectile(GameObject hitbox, float ProjectileSpeed, float DamageMultiplier, float LaunchTimer, float AtkCD, int SpellIndex)
+    {
+        Projectile projectile = new Projectile()
+        {
+            projectile = hitbox,
+            Direction = transform.forward.normalized,
+            rotation = transform.rotation,
+            projectileSpeed = ProjectileSpeed,
+            Damage = _playerEntity.Damage * DamageMultiplier,
+            IsPlayer = _playerEntity.IsPlayer,
+            LaunchTimer = LaunchTimer,
+        };
+        hitbox.GetComponent<ProjectileStats>().projectile = projectile;
+        _playerProjectiles.Add(projectile);
+        OnCoolDownAtk?.Invoke(AtkCD, SpellIndex);
+    }
     
     void Update()
     {

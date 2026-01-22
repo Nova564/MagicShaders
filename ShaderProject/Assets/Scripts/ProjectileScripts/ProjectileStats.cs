@@ -1,4 +1,7 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class ProjectileStats : MonoBehaviour
 {
@@ -11,6 +14,33 @@ public class ProjectileStats : MonoBehaviour
     void Awake()
     {
         projectile = new Projectile();
+        PlayerController.OnCoolDownAtk += CallRoutine;
+    }
+
+    void OnDestroy()
+    {
+        PlayerController.OnCoolDownAtk -= CallRoutine;
+    }
+
+    void CallRoutine(float a, int index)
+    {
+         StartCoroutine(LancerApresDelai());
+         PlayerController.OnCoolDownAtk -= CallRoutine;
+    }
+
+    IEnumerator LancerApresDelai()
+    {
+        yield return new WaitForSeconds(projectile.LaunchTimer);
+        FreeFromParent();
+    }
+
+    void FreeFromParent()
+    {
+        if (this.gameObject.GetComponent<ParentConstraint>())
+        {
+            ParentConstraint constraint = this.gameObject.GetComponent<ParentConstraint>();
+            constraint.RemoveSource(0);
+        }
     }
 
     public void SpawnParticle(ParticleSystem  particle)
@@ -27,4 +57,5 @@ public class Projectile
     public float projectileSpeed;
     public float Damage;
     public bool IsPlayer;
+    public float LaunchTimer;
 }
