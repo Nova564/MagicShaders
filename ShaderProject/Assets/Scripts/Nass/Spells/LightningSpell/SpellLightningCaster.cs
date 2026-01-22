@@ -3,8 +3,8 @@ using UnityEngine.InputSystem;
 
 public class SpellLightningCaster : MonoBehaviour
 {
-    [Header("Spell prefabs")]
-    [SerializeField] private GameObject _lightningTelegraphPrefab;
+    [Header("Spell Prefabs")]
+    [SerializeField] private GameObject _telegraphPrefab;
     [SerializeField] private GameObject _lightningSpellPrefab;
 
     [Header("Input")]
@@ -13,11 +13,16 @@ public class SpellLightningCaster : MonoBehaviour
     [SerializeField] private KeyCode _cancelKey = KeyCode.Mouse1;
 
     [Header("Settings")]
-    [SerializeField] private float _lightningLength = 15f;
+    [SerializeField] private float _maxCastDistance = 100f;
+    [SerializeField] private float _maxCastRange = 15f;
+    [SerializeField] private LayerMask _groundLayer = -1;
     [SerializeField] private bool _useNewInputSystem = false;
     [SerializeField] private float _telegraphHeightOffset = 0.05f;
     [SerializeField] private float _lightningSpellHeightOffset = 0.01f;
-    [SerializeField] private float _playerOffset = 1.5f;
+    [SerializeField] private float _lightningSpawnYOffset = 4f; 
+
+    [Header("Spell Duration")]
+    [SerializeField] private float _spellLifetime = 3f;
 
     [Header("Visual Feedback")]
     [SerializeField] private Color _validColor = new Color(0.5f, 0.8f, 1f, 0.7f);
@@ -29,8 +34,9 @@ public class SpellLightningCaster : MonoBehaviour
     private GameObject _currentTelegraph;
     private Material _telegraphMaterial;
     private Camera _mainCamera;
-    private Vector3 _targetDirection;
+    private Vector3 _targetPosition;
     private bool _isValidPosition;
+    private bool _hasValidGroundHit;
 
     void Start()
     {
@@ -66,7 +72,7 @@ public class SpellLightningCaster : MonoBehaviour
 
         if (_currentState == CastState.Previewing)
         {
-            UpdateTelegraphDirection();
+            UpdateTelegraphPosition();
         }
     }
 
@@ -81,7 +87,7 @@ public class SpellLightningCaster : MonoBehaviour
         {
             ActivateTelegraph();
         }
-        else if (_currentState == CastState.Previewing && _isValidPosition)
+        else if (_currentState == CastState.Previewing && _isValidPosition && _hasValidGroundHit)
         {
             CastSpell();
         }
@@ -89,15 +95,15 @@ public class SpellLightningCaster : MonoBehaviour
 
     void ActivateTelegraph()
     {
-        if (_lightningTelegraphPrefab == null) return;
+        if (_telegraphPrefab == null)
+        {
+            Debug.LogError("Telegraph prefab is null");
+            return;
+        }
 
         _currentState = CastState.Previewing;
-        _targetDirection = GetMouseDirection();
-
-        Vector3 spawnPosition = transform.position + _targetDirection * _playerOffset + Vector3.up * _telegraphHeightOffset;
-        _currentTelegraph = Instantiate(_lightningTelegraphPrefab, spawnPosition, Quaternion.identity);
-
-        _currentTelegraph.transform.localScale = new Vector3(1f, 1f, _lightningLength);
+        _targetPosition = GetGroundPosition(_telegraphHeightOffset, out _hasValidGroundHit);
+        _currentTelegraph = Instantiate(_telegraphPrefab, _targetPosition, Quaternion.Euler(90, 0, 0));
 
         Renderer renderer = _currentTelegraph.GetComponentInChildren<Renderer>();
         if (renderer != null)
@@ -105,24 +111,16 @@ public class SpellLightningCaster : MonoBehaviour
             _telegraphMaterial = new Material(renderer.material);
             renderer.material = _telegraphMaterial;
         }
-
-        _isValidPosition = true;
     }
 
-    void UpdateTelegraphDirection()
+    void UpdateTelegraphPosition()
     {
         if (_currentTelegraph == null) return;
 
-        _targetDirection = GetMouseDirection();
+        _targetPosition = GetGroundPosition(_telegraphHeightOffset, out _hasValidGroundHit);
+        _isValidPosition = Vector3.Distance(transform.position, _targetPosition) <= _maxCastRange && _hasValidGroundHit;
 
-        Vector3 telegraphPosition = transform.position + _targetDirection * _playerOffset + Vector3.up * _telegraphHeightOffset;
-        _currentTelegraph.transform.position = telegraphPosition;
-
-        if (_targetDirection != Vector3.zero)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(_targetDirection) * Quaternion.Euler(90, 310, 45);
-            _currentTelegraph.transform.rotation = targetRotation;
-        }
+        _currentTelegraph.transform.position = _targetPosition;
 
         if (_telegraphMaterial != null)
         {
@@ -132,49 +130,56 @@ public class SpellLightningCaster : MonoBehaviour
 
     public void CastSpell()
     {
-        if (_lightningSpellPrefab == null) return;
+        if (_lightningSpellPrefab == null)
+        {
+            Debug.LogError("Lightning  prefab  null");
+            return;
+        }
 
         if (_currentTelegraph != null)
         {
             Destroy(_currentTelegraph);
         }
 
-        Vector3 startPosition = transform.position + _targetDirection * _playerOffset + Vector3.up * _lightningSpellHeightOffset;
-        Vector3 centerPosition = startPosition + _targetDirection * (_lightningLength * 0.5f);
-        Quaternion lightningRotation = Quaternion.LookRotation(_targetDirection) * Quaternion.Euler(90f, 0f, 0f);
+        Vector3 groundPosition = GetGroundPosition(_lightningSpellHeightOffset, out _);
+        Vector3 lightningPosition = groundPosition + Vector3.up * _lightningSpawnYOffset;
 
-        GameObject lightningSpell = Instantiate(_lightningSpellPrefab, centerPosition, lightningRotation);
-        lightningSpell.transform.localScale = new Vector3(0.3f, _lightningLength * 0.5f, 0.3f);
+        GameObject lightningSpell = Instantiate(_lightningSpellPrefab, lightningPosition, Quaternion.identity);
 
-        LightningSpell spellComponent = lightningSpell.GetComponent<LightningSpell>();
-        if (spellComponent != null)
+        ParticleSystem[] particleSystems = lightningSpell.GetComponentsInChildren<ParticleSystem>(true);
+        foreach (ParticleSystem ps in particleSystems)
         {
-            spellComponent.ActivateSpell(_lightningLength);
+            if (ps != null)
+            {
+                ps.Play();
+            }
         }
+
+        Destroy(lightningSpell, _spellLifetime);
 
         _currentState = CastState.Idle;
         _isValidPosition = false;
+        _hasValidGroundHit = false;
     }
 
-    Vector3 GetMouseDirection()
+    Vector3 GetGroundPosition(float heightOffset, out bool hitGround)
     {
+        hitGround = false;
+
         if (_mainCamera == null)
         {
-            return transform.forward;
+            return transform.position + transform.forward * 5f + Vector3.up * heightOffset;
         }
 
         Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
-        Plane groundPlane = new Plane(Vector3.up, transform.position);
 
-        if (groundPlane.Raycast(ray, out float distance))
+        if (Physics.Raycast(ray, out RaycastHit hit, _maxCastDistance, _groundLayer))
         {
-            Vector3 targetPoint = ray.GetPoint(distance);
-            Vector3 direction = (targetPoint - transform.position).normalized;
-            direction.y = 0;
-            return direction;
+            hitGround = true;
+            return hit.point + Vector3.up * heightOffset;
         }
 
-        return transform.forward;
+        return ray.origin + ray.direction.normalized * _maxCastDistance;
     }
 
     public void CancelPreview()
@@ -185,6 +190,7 @@ public class SpellLightningCaster : MonoBehaviour
             _currentTelegraph = null;
             _currentState = CastState.Idle;
             _isValidPosition = false;
+            _hasValidGroundHit = false;
         }
     }
 }

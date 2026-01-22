@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6778882482742801570
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5613305901052144971}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5613305901052144971
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6778882482742801570}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -1, z: -0, w: 0}
+  m_LocalPosition: {x: -1.2072242, y: -2.4533334, z: 0.371304}
+  m_LocalScale: {x: 0.4, y: 0.6666667, z: 0.4}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4543892353832623319}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &805144049124097368
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -50,7 +81,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4708766678942625726, guid: 2e47a9a11b4d5a74c84cd59c909c74aa, type: 3}
       propertyPath: m_Name
-      value: LightningSpell2 Variant
+      value: TrueLightningSpell
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -67,6 +98,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3756939123831677327, guid: 2e47a9a11b4d5a74c84cd59c909c74aa, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4663388898803911862}
+    - targetCorrespondingSourceObject: {fileID: 3756939123831677327, guid: 2e47a9a11b4d5a74c84cd59c909c74aa, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5613305901052144971}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e47a9a11b4d5a74c84cd59c909c74aa, type: 3}
 --- !u!4 &4543892353832623319 stripped
