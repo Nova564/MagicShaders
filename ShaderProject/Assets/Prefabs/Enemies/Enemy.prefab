@@ -96,6 +96,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EDamage: 0
   EHealth: 0
+  EIsDead: 0
   EHeight: 0
   enemyData: {fileID: 11400000, guid: 53468ae17bd4f324e996628e454b4db0, type: 2}
   healthbar: {fileID: 0}
@@ -103,6 +104,7 @@ MonoBehaviour:
   EState: 0
   ShootSounds: []
   _enemyEntity: {fileID: 5864574584285875022}
-  _DropsPrefab: []
+  _DropsPrefab:
+  - {fileID: 4129119210478951477, guid: ae1ecf64098332744b695d327fb28515, type: 3}
   soundeffecthit: {fileID: 0}
   soundeffectdeath: {fileID: 0}

@@ -84,32 +84,29 @@ public class EnemyControl : MonoBehaviour
         
 
         _enemyEntity.OnDamageTaken += UpdateHealth;
-        _enemyEntity.OnDeath += EnemyDied;
+        Entity.OnDeath += EnemyDied;
         SetEntityStats();
     }
 
     void OnDestroy()
     {
-        //enemy meurt
-        // if (player.GetComponent<PlayerController>().IsBattle.Contains(this.GameObject()))
-        // {
-        //     player.GetComponent<PlayerController>().IsBattle.Remove(this.GameObject());
-        // }
-
         foreach (var drops in _DropsPrefab)
         {
-            GameObject NewDrop = Instantiate(drops, Vector3.zero, Quaternion.identity);
+            GameObject NewDrop = Instantiate(drops, transform.position, Quaternion.identity);
         }
         _enemyEntity.OnDamageTaken -= UpdateHealth;
-        _enemyEntity.OnDeath -= EnemyDied;
+        Entity.OnDeath -= EnemyDied;
     }
 
-    void EnemyDied()
+    void EnemyDied(bool isPlayer)
     {
-        EIsDead=true;
-        if (soundeffectdeath != null)
+        if (!isPlayer && _enemyEntity.Health <=0)
         {
-            SoundSystem.Instance.PlaySFX(soundeffectdeath, 0.3f);
+            EIsDead = true;
+            if (soundeffectdeath != null)
+            {
+                SoundSystem.Instance.PlaySFX(soundeffectdeath, 0.3f);
+            }
         }
     }
 

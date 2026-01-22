@@ -28,28 +28,21 @@ public class CollisionSystem : MonoBehaviour
             EntityA = HasEntityCompInParents(PlayerSphere);
         }
         Item item = Itempick.GetComponent<Item>();
-        Item newItem = new Item();
-        newItem.Name = item.Name;
-        newItem.ID = item.ID;
-        if (item != null && EntityA != null && EntityA.IsPlayer)
+        if (item.IsGold)
         {
-            EntityA.AddItem(newItem);
+            EntityA.AddGold(item.GoldAmount);
             Destroy(Itempick);
         }
-    }
-
-    public void HandleXpDrops(GameObject PlayerSphere, GameObject Xpshard)
-    {
-        Entity EntityA = null;
-        if (EntityA == null)
+        else
         {
-            EntityA = HasEntityCompInParents(PlayerSphere);
-        }
-        XpShard xp = Xpshard.GetComponent<XpShard>();
-        if (xp != null && EntityA != null && EntityA.IsPlayer)
-        {
-            EntityA.AddXp(xp.XPAmount);
-            Destroy(Xpshard);
+            Item newItem = new Item();
+            newItem.Name = item.Name;
+            newItem.ID = item.ID;
+            if (item != null && EntityA != null && EntityA.IsPlayer)
+            {
+                EntityA.AddItem(newItem);
+                Destroy(Itempick);
+            }
         }
     }
 

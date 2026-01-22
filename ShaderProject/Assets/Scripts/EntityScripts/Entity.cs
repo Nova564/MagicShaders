@@ -10,22 +10,19 @@ public class Entity : MonoBehaviour
     [SerializeField] private float _Maxhealth = 100;
     [SerializeField] private float _damage = 5;
     [SerializeField] private AudioClip soundeffectdamage;
-    private float _currentXP = 0;
-    private int _LvL = 1;
+    private int _gold = 0;
     private float _XptoLvlUp = 100;
     private List<Item> _inventory = new List<Item>();
     
     public float Health { get { return _health; } set { _health = value; } }
     public float MaxHealth { get { return _Maxhealth; } set { _Maxhealth = value; } }
-    public float XP { get { return _currentXP; } set { _currentXP = value; } }
-    public int LVL { get { return _LvL; } set { _LvL = value; } }
-    public float XPToLVLUP { get { return _XptoLvlUp; } private set{ _XptoLvlUp = value; } }
+    public int GOLD { get { return _gold; } set { _gold = value; } }
     [SerializeField] public List<Item> Inventory { get { return _inventory; } private set{ _inventory = value; } }
     public float Damage { get { return _damage; } set { _damage = value; } }
     public bool IsPlayer {get { return _isPlayer; } set { _isPlayer = value; }}
     bool tookdamage = false;
     public event Action OnDamageTaken;
-    public event Action OnDeath;
+    public static event Action<bool> OnDeath;
 
     private CinemachineImpulseSource _impulse;
 
@@ -44,24 +41,7 @@ public class Entity : MonoBehaviour
             SoundSystem.Instance.PlaySFX(soundeffectdamage, 0.3f);
         }
     }
-
-    void LevelUp()
-    {
-        XP -= XPToLVLUP;
-        LVL += 1;
-        XPToLVLUP += XPToLVLUP;
-        MaxHealth += MaxHealth;
-        Health = MaxHealth;
-        Damage += Damage;
-    }
-
-    void UpdateXP()
-    {
-        if (XP >= _XptoLvlUp)
-        {
-            LevelUp();
-        }
-    }
+    
 
     public void AddItem(Item item)
     {
@@ -69,15 +49,11 @@ public class Entity : MonoBehaviour
         Debug.Log(Inventory.Count);
     }
 
-    public void AddXp(float amount)
+    public void AddGold(int amount)
     {
-        XP += amount;
+        GOLD += amount;
     }
-
-    void Update()
-    {
-        UpdateXP();
-    }
+    
 
     void UpdateHealth()
     {
@@ -85,7 +61,7 @@ public class Entity : MonoBehaviour
         {
             Debug.Log("Enemy DIED");
             Health = 0;
-            OnDeath?.Invoke();
+            OnDeath?.Invoke(_isPlayer);
         }
     }
 }

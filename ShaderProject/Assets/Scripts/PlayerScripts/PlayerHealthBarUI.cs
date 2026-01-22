@@ -11,16 +11,9 @@ public class PlayerHealthBarUI : MonoBehaviour
     PlayerInput _playerinput = null;
     PlayerController _playerController = null;
     [SerializeField] Image _healthBar;
-    [SerializeField] Image _XpBar;
-    [SerializeField] TextMeshProUGUI _LvLText;
-    [SerializeField] List<Image> _imgList;
-    [SerializeField] List<Sprite> _Ps4SpriteList;
-    [SerializeField] List<Sprite> _PCSpriteList;
     [SerializeField] List<Image> _CoolDownBarList;
+    [SerializeField] TextMeshProUGUI _goldText;
     private List<AtkCoolDown>  _atkCoolDown = new List<AtkCoolDown>();
-    [SerializeField] private TextMeshProUGUI _QuestTitle;
-    [SerializeField] private TextMeshProUGUI _QuestDetails;
-    
     
     
     // Update is called once per frame
@@ -30,11 +23,11 @@ public class PlayerHealthBarUI : MonoBehaviour
         {
             PlayerStats = FindFirstObjectByType<PlayerMove>().gameObject.GetComponent<Entity>();
             _playerController = FindFirstObjectByType<PlayerMove>().gameObject.GetComponent<PlayerController>();
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < _CoolDownBarList.Count; i++)
             {
                 _atkCoolDown.Add(new AtkCoolDown());
             }
-            //_playerController.OnCoolDownAtk += SetCoolDownAtk;
+            PlayerController.OnCoolDownAtk += SetCoolDownAtk;
         }
 
         if(_playerinput == null && FindFirstObjectByType<PlayerMove>() != null)
@@ -45,21 +38,16 @@ public class PlayerHealthBarUI : MonoBehaviour
         if (PlayerStats != null)
         {
             UpdateHB();
-            UpdateXPB();
             UpdateAtkCoolDown();
-            
-        }
-
-        if (_playerController != null)
-        {
-            UpdateUIControllerButtons();
-            UpdateQuestUI();
+            UpdateGold();
         }
     }
 
+  
+
     private void OnDestroy()
     {
-       //_playerController.OnCoolDownAtk -= SetCoolDownAtk;
+       PlayerController.OnCoolDownAtk -= SetCoolDownAtk;
     }
 
     void UpdateHB()
@@ -67,57 +55,18 @@ public class PlayerHealthBarUI : MonoBehaviour
         float healthPercent = PlayerStats.Health / PlayerStats.MaxHealth;
         _healthBar.fillAmount = healthPercent;
     }
-    void UpdateXPB()
-    {
-        float XpPercent = PlayerStats.XP / PlayerStats.XPToLVLUP;
-        _XpBar.fillAmount = XpPercent;
-        _LvLText.text = "LVL " + PlayerStats.LVL.ToString();
-    }
 
-    void UpdateUIControllerButtons()
+    void UpdateGold()
     {
-        for (int i = 0; i < _imgList.Count; i++)
+        if (PlayerStats.GOLD <= 1)
         {
-            var scheme = _playerinput.currentControlScheme;
-            string display = _playerinput.actions["Attack" + (i + 1).ToString()]
-                .GetBindingDisplayString(bindingMask: InputBinding.MaskByGroup(scheme));
-            if (scheme == "Gamepad")
-            {
-                switch (display)
-                {
-                    case "Square":
-                        _imgList[i].sprite = _Ps4SpriteList[0];
-                        continue;
-                    case "Circle":
-                        _imgList[i].sprite = _Ps4SpriteList[2];
-                        continue;
-                    case "Triangle":
-                        _imgList[i].sprite = _Ps4SpriteList[1];
-                        continue;
-                    case "R1":
-                        _imgList[i].sprite = _Ps4SpriteList[4];
-                        continue;
-                }
-            }
-            else if (scheme == "Keyboard&Mouse")
-            {
-                switch (display)
-                {
-                    case "LMB":
-                        _imgList[i].sprite = _PCSpriteList[0];
-                        continue;
-                    case "RMB":
-                        _imgList[i].sprite = _PCSpriteList[1];
-                        continue;
-                    case "&":
-                        _imgList[i].sprite = _PCSpriteList[2];
-                        continue;
-                    case "É":
-                        _imgList[i].sprite = _PCSpriteList[3];
-                        continue;
-                }
-            }
+            _goldText.text = PlayerStats.GOLD.ToString() + " GOLD";
         }
+        else
+        {
+            _goldText.text = PlayerStats.GOLD.ToString() + " GOLDS";
+        }
+        
     }
 
     void SetCoolDownAtk(float coolDown, int index)
@@ -126,22 +75,7 @@ public class PlayerHealthBarUI : MonoBehaviour
         _atkCoolDown[index].TimeCooldown = coolDown;
         _atkCoolDown[index].IsInCooldown = true;
     }
-
-    void UpdateQuestUI()
-    {
-        foreach (Quest quest in _playerController.QuestList)
-        {
-            _QuestTitle.text = quest.QuestName;
-            _QuestDetails.text = quest.QuestLine+ "\n " + quest.ItemReq.name + ": " + quest.ItemActualAmount + "/" + quest.ItemAmountReq;
-        }
-
-        if (_playerController.QuestList.Count <= 0)
-        {
-            _QuestTitle.text = null;
-            _QuestDetails.text = null;
-        }
-        
-    }
+    
     
     void UpdateAtkCoolDown()
     {
