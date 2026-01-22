@@ -33,8 +33,16 @@ public class PlayerMove : MonoBehaviour
         _sprint.action.performed += StartSprint;
         _sprint.action.canceled += StopSprint;
         _jump.action.started += StartJump;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+
+        if (CursorManager.Instance != null)
+        {
+            CursorManager.Instance.LockCursor();
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
 
     void OnDestroy()
@@ -48,7 +56,7 @@ public class PlayerMove : MonoBehaviour
 
     void StartMove(InputAction.CallbackContext ctx)
     {
-        if (!_movementEnabled) return; 
+        if (!_movementEnabled) return;
 
         if (_animator.GetBool("IsRunning"))
         {
@@ -77,7 +85,7 @@ public class PlayerMove : MonoBehaviour
 
     void StartJump(InputAction.CallbackContext ctx)
     {
-        if (!_movementEnabled) return; 
+        if (!_movementEnabled) return;
 
         if (_characterController.isGrounded)
         {
@@ -89,7 +97,7 @@ public class PlayerMove : MonoBehaviour
 
     void StartSprint(InputAction.CallbackContext ctx)
     {
-        if (!_movementEnabled) return; 
+        if (!_movementEnabled) return;
         _animator.SetBool("IsRunning", true);
     }
 
@@ -139,7 +147,7 @@ public class PlayerMove : MonoBehaviour
 
     void RotateTowardsInput()
     {
-        if (!_movementEnabled) return; 
+        if (!_movementEnabled) return;
 
         if (finalDirection.sqrMagnitude > 0.001f)
         {
@@ -147,6 +155,7 @@ public class PlayerMove : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 15f * Time.deltaTime);
         }
     }
+
     public void SetMovementEnabled(bool enabled)
     {
         _movementEnabled = enabled;

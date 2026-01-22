@@ -129,6 +129,11 @@ public class SpellLightningCaster : MonoBehaviour
             _telegraphMaterial = new Material(renderer.material);
             renderer.material = _telegraphMaterial;
         }
+
+        if (CursorManager.Instance != null)
+        {
+            CursorManager.Instance.RequestUnlock();
+        }
     }
 
     void UpdateTelegraphPosition()
@@ -185,6 +190,11 @@ public class SpellLightningCaster : MonoBehaviour
 
         Destroy(lightningSpell, _spellLifetime);
 
+        if (CursorManager.Instance != null)
+        {
+            CursorManager.Instance.ReleaseUnlock();
+        }
+
         _currentState = CastState.Idle;
         _isValidPosition = false;
         _hasValidGroundHit = false;
@@ -229,6 +239,11 @@ public class SpellLightningCaster : MonoBehaviour
             _currentState = CastState.Idle;
             _isValidPosition = false;
             _hasValidGroundHit = false;
+
+            if (CursorManager.Instance != null)
+            {
+                CursorManager.Instance.ReleaseUnlock();
+            }
         }
     }
 }
