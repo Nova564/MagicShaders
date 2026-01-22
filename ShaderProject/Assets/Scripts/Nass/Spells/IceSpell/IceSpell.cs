@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class IceSpell : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class IceSpell : MonoBehaviour
     [Header("Visual Effects")]
     [SerializeField] private float _maxIntensity = 8f;
     [SerializeField] private float _chainWidth = 0.25f;
+    [SerializeField] private GameObject _explosionParticlePrefab;
+    [SerializeField] private Material _customIceMaterial;
 
     private Material _iceMaterial;
     private LineRenderer _chainLineRenderer;
@@ -21,6 +24,8 @@ public class IceSpell : MonoBehaviour
     private bool _isActivated;
     private float _chainLength;
     private bool _hasDamaged;
+
+    public event Action<Transform> OnExplode;
 
     void Awake()
     {
@@ -41,16 +46,30 @@ public class IceSpell : MonoBehaviour
         _chainLineRenderer.endWidth = _chainWidth;
         _chainLineRenderer.useWorldSpace = true;
 
-        Shader shader = Shader.Find("Unlit/Color");
-        if (shader == null)
+        if (_customIceMaterial != null)
         {
-            shader = Shader.Find("Sprites/Default");
+            _iceMaterial = new Material(_customIceMaterial);
+            _chainLineRenderer.material = _iceMaterial;
+        }
+        else
+        {
+            Shader shader = Shader.Find("Unlit/IceSpell");
+            if (shader == null)
+            {
+                Debug.LogWarning("Icespell shader not found going default");
+                shader = Shader.Find("Unlit/Color");
+            }
+
+            if (shader != null)
+            {
+                _iceMaterial = new Material(shader);
+                _chainLineRenderer.material = _iceMaterial;
+            }
         }
 
-        if (shader != null)
+        if (_iceMaterial != null && _iceMaterial.HasProperty("_FogIntensity"))
         {
-            _iceMaterial = new Material(shader);
-            _chainLineRenderer.material = _iceMaterial;
+            _iceMaterial.SetFloat("_FogIntensity", 0f);
         }
     }
 
@@ -94,6 +113,7 @@ public class IceSpell : MonoBehaviour
 
         _currentCharge = 1f;
         UpdateShaderProperties(1f);
+        TriggerExplosion();
         ApplyDamage();
 
         yield return new WaitForSeconds(0.5f);
@@ -125,6 +145,14 @@ public class IceSpell : MonoBehaviour
         if (_iceMaterial != null)
         {
             _iceMaterial.color = iceColor;
+            if (_iceMaterial.HasProperty("_FogIntensity"))
+            {
+                float fogIntensity = Mathf.Pow(charge, 2f);
+                _iceMaterial.SetFloat("_FogIntensity", fogIntensity);
+
+                float emissionIntensity = Mathf.Lerp(0.5f, _maxIntensity, charge);
+                _iceMaterial.SetFloat("_EmissionIntensity", emissionIntensity);
+            }
         }
 
         if (_chainLineRenderer != null)
@@ -134,6 +162,23 @@ public class IceSpell : MonoBehaviour
         }
     }
 
+    void TriggerExplosion()
+    {
+        if (_targetEnemy == null) return;
+
+        OnExplode?.Invoke(_targetEnemy);
+
+        if (_explosionParticlePrefab != null)
+        {
+            Vector3 explosionPos = _targetEnemy.position + Vector3.up * 0.5f;
+            GameObject particles = Instantiate(_explosionParticlePrefab, explosionPos, Quaternion.identity);
+
+            Destroy(particles, 3f);
+        }
+
+        Debug.Log($"Ice spell exploded on {_targetEnemy.name}!");
+    }
+
     void ApplyDamage()
     {
         if (_hasDamaged || _targetEnemy == null) return;
@@ -141,6 +186,8 @@ public class IceSpell : MonoBehaviour
         if (_targetEnemy.CompareTag("Enemy"))
         {
             Debug.Log($"Ice spell hit enemy {_targetEnemy.name} for {_damage} damage");
+
+            // effet de slow à faire
         }
 
         _hasDamaged = true;
