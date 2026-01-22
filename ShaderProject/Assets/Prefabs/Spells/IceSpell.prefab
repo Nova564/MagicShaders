@@ -73,9 +73,5 @@ MonoBehaviour:
   _maxRange: 10
   _maxIntensity: 8
   _chainWidth: 0.25
-  _explosionParticlePrefab: {fileID: 4708766678942625726, guid: 2e47a9a11b4d5a74c84cd59c909c74aa, type: 3}
+  _explosionParticlePrefab: {fileID: 5365076228851995366, guid: 12a6cc8e0e229f147835ece09473b90b, type: 3}
   _customIceMaterial: {fileID: 2100000, guid: 2a21b07f178fa514abfb027b108f115b, type: 2}
-  _fogNoiseScale: 5
-  _fogNoiseSpeed: 1
-  _fogThickness: 1.5
-  _fogColor: {r: 0.7, g: 0.9, b: 1, a: 0.8}
