@@ -8,14 +8,20 @@ public class FlameSpell : MonoBehaviour
     [SerializeField] private float _chargeUpDuration = 1.5f;
     [SerializeField] private AnimationCurve _chargeCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
+    [Header("Projectile Settings")]
+    [SerializeField] private float _projectileSpeed = 20f;
+    [SerializeField] private float _projectileLifetime = 5f;
+    [SerializeField] private float _projectileDamage = 150f;
+
     [Header("Activation")]
-    [SerializeField] private float _activationDuration = 3f;
     [SerializeField] private float _damagePerSecond = 75f;
 
     private List<Material> _flameMaterials = new List<Material>();
     private float _currentCharge;
     private bool _isActivated;
-    private float _activationTime;
+    private bool _isLaunched;
+    private Vector3 _launchDirection;
+    private float _launchTime;
 
     void Awake()
     {
@@ -39,15 +45,16 @@ public class FlameSpell : MonoBehaviour
         }
     }
 
-    public void ActivateSpell()
+    public void ActivateSpell(Vector3 direction)
     {
         _isActivated = true;
-        _activationTime = Time.time;
-        StartCoroutine(ChargeUpAnimation());
+        _launchDirection = direction.normalized;
+        StartCoroutine(ChargeAndLaunch());
     }
 
-    private IEnumerator ChargeUpAnimation()
+    private IEnumerator ChargeAndLaunch()
     {
+        // Phase de charge
         float elapsed = 0f;
 
         while (elapsed < _chargeUpDuration)
@@ -60,6 +67,15 @@ public class FlameSpell : MonoBehaviour
 
         _currentCharge = 1f;
         UpdateShaderProperties(1f);
+
+        // Lancer le projectile
+        LaunchProjectile();
+    }
+
+    void LaunchProjectile()
+    {
+        _isLaunched = true;
+        _launchTime = Time.time;
     }
 
     void UpdateShaderProperties(float charge)
@@ -78,7 +94,7 @@ public class FlameSpell : MonoBehaviour
                 }
                 if (material.HasProperty("_EmissionStrength"))
                 {
-                    material.SetFloat("_EmissionStrength", Mathf.Lerp(1f, 10f, charge));
+                    material.SetFloat("_EmissionStrength", Mathf.Lerp(1f, 15f, charge));
                 }
             }
         }
@@ -86,18 +102,33 @@ public class FlameSpell : MonoBehaviour
 
     void Update()
     {
-        if (_isActivated && Time.time - _activationTime >= _chargeUpDuration + _activationDuration)
+        if (_isLaunched)
         {
-            Destroy(gameObject);
+            // Déplacer le projectile
+            transform.position += _launchDirection * _projectileSpeed * Time.deltaTime;
+
+            // Détruire après le lifetime
+            if (Time.time - _launchTime >= _projectileLifetime)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 
-    void OnTriggerStay(Collider other)
+    void OnTriggerEnter(Collider other)
     {
-        if (_isActivated && _currentCharge >= 1f && other.CompareTag("Enemy"))
+        if (_isLaunched && other.CompareTag("Enemy"))
         {
-            // Système de santé à implémenter
-            // damage = damagepersecond * time.deltatime
+            Debug.Log($"Fireball hit {other.name} for {_projectileDamage} damage");
+            // Appliquer les dégâts ici
+            // other.GetComponent<EnemyHealth>()?.TakeDamage(_projectileDamage);
+
+            Destroy(gameObject);
+        }
+        else if (_isLaunched && !other.CompareTag("Player") && !other.isTrigger)
+        {
+            // Détruire si collision avec un obstacle
+            Destroy(gameObject);
         }
     }
 

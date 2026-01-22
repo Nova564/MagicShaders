@@ -19,11 +19,14 @@ public class SpellFlameCaster : MonoBehaviour
     [SerializeField] private float _flameSpellHeightOffset = 0.01f;
     [SerializeField] private float _playerOffset = 1f;
 
+    [Header("Cast Settings")]
+    [SerializeField] private float _chargeDuration = 1.5f;
+
     [Header("Visual Feedback")]
     [SerializeField] private Color _validColor = Color.green;
     [SerializeField] private Color _invalidColor = Color.red;
 
-    private enum CastState { Idle, Previewing }
+    private enum CastState { Idle, Previewing, Casting }
     private CastState _currentState = CastState.Idle;
 
     private GameObject _currentTelegraph;
@@ -31,10 +34,12 @@ public class SpellFlameCaster : MonoBehaviour
     private Camera _mainCamera;
     private Vector3 _targetDirection;
     private bool _isValidPosition;
+    private PlayerMove _playerMovement; 
 
     void Start()
     {
         _mainCamera = Camera.main;
+        _playerMovement = GetComponent<PlayerMove>(); 
 
         if (_useNewInputSystem && _castActionKey.action != null)
         {
@@ -113,33 +118,51 @@ public class SpellFlameCaster : MonoBehaviour
 
         if (_targetDirection != Vector3.zero)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(_targetDirection) * Quaternion.Euler(90, 180, 45);
+            Quaternion targetRotation = Quaternion.LookRotation(_targetDirection) * Quaternion.Euler(90, 260, 0);
             _currentTelegraph.transform.rotation = targetRotation;
         }
 
         if (_telegraphMaterial != null)
         {
-            _telegraphMaterial.color = _isValidPosition ? _validColor : _invalidColor; //inutile vu qu'il n'y a pas de position valide/invalide
+            _telegraphMaterial.color = _validColor;
         }
     }
 
     public void CastSpell()
     {
         if (_flameSpellPrefab == null) return;
+        Vector3 finalDirection = _targetDirection;
 
         if (_currentTelegraph != null)
         {
             Destroy(_currentTelegraph);
         }
+        _currentState = CastState.Casting;
+        if (_playerMovement != null)
+        {
+            _playerMovement.SetMovementEnabled(false);
+        }
 
-        Vector3 flamePosition = transform.position + _targetDirection * _playerOffset + Vector3.up * _flameSpellHeightOffset;
-        Quaternion flameRotation = Quaternion.LookRotation(_targetDirection) * Quaternion.Euler(0, 180f, 0);
+
+        Vector3 flamePosition = transform.position + finalDirection * _playerOffset + Vector3.up * _flameSpellHeightOffset;
+        Quaternion flameRotation = Quaternion.LookRotation(finalDirection) * Quaternion.Euler(0, 180f, 0);
         GameObject flameSpell = Instantiate(_flameSpellPrefab, flamePosition, flameRotation);
 
         FlameSpell spellComponent = flameSpell.GetComponent<FlameSpell>();
         if (spellComponent != null)
         {
-            spellComponent.ActivateSpell();
+            spellComponent.ActivateSpell(finalDirection);
+        }
+        StartCoroutine(ReenableMovementAfterCast());
+    }
+
+    private System.Collections.IEnumerator ReenableMovementAfterCast()
+    {
+        yield return new WaitForSeconds(_chargeDuration);
+
+        if (_playerMovement != null)
+        {
+            _playerMovement.SetMovementEnabled(true);
         }
 
         _currentState = CastState.Idle;

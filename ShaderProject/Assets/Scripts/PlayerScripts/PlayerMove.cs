@@ -17,14 +17,13 @@ public class PlayerMove : MonoBehaviour
 
     Vector3 _direction;
     private Vector3 velocity = Vector3.zero;
-
     private Vector3 finalDirection = Vector3.zero;
-
     private Vector2 lastMousePos;
     private float mouseStillTimer = 0f;
     private const float mouseStillThreshold = 0.05f;
     private const float mouseStillDelay = 0.1f;
     private bool _jumpPressed = false;
+    private bool _movementEnabled = true; // Nouveau flag pour contrôler le mouvement
 
     void Start()
     {
@@ -47,6 +46,8 @@ public class PlayerMove : MonoBehaviour
 
     void StartMove(InputAction.CallbackContext ctx)
     {
+        if (!_movementEnabled) return; // Bloquer si mouvement désactivé
+
         if (_animator.GetBool("IsRunning"))
         {
             _speed = 8;
@@ -74,6 +75,8 @@ public class PlayerMove : MonoBehaviour
 
     void StartJump(InputAction.CallbackContext ctx)
     {
+        if (!_movementEnabled) return; // Bloquer si mouvement désactivé
+
         if (_characterController.isGrounded)
         {
             _animator.SetTrigger("Jump");
@@ -81,11 +84,13 @@ public class PlayerMove : MonoBehaviour
             _jumpPressed = true;
         }
     }
-    
+
     void StartSprint(InputAction.CallbackContext ctx)
     {
+        if (!_movementEnabled) return; // Bloquer si mouvement désactivé
         _animator.SetBool("IsRunning", true);
     }
+
     void StopSprint(InputAction.CallbackContext ctx)
     {
         _animator.SetBool("IsRunning", false);
@@ -93,19 +98,29 @@ public class PlayerMove : MonoBehaviour
 
     public void TpTo(Vector3 TPpos)
     {
-        _characterController.enabled= false;
+        _characterController.enabled = false;
         transform.position = TPpos;
         _characterController.enabled = true;
     }
+
     void UpdateMove()
     {
-        finalDirection = _direction;
-        if (Camera.main != null)
+        if (!_movementEnabled)
         {
-            var forward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z).normalized;
-            var right = new Vector3(Camera.main.transform.right.x, 0, Camera.main.transform.right.z).normalized;
+            // Si le mouvement est désactivé, réinitialiser la direction
+            _direction = Vector3.zero;
+            finalDirection = Vector3.zero;
+        }
+        else
+        {
+            finalDirection = _direction;
+            if (Camera.main != null)
+            {
+                var forward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z).normalized;
+                var right = new Vector3(Camera.main.transform.right.x, 0, Camera.main.transform.right.z).normalized;
 
-            finalDirection = (forward * _direction.z + right * _direction.x).normalized;
+                finalDirection = (forward * _direction.z + right * _direction.x).normalized;
+            }
         }
 
         if (_characterController.isGrounded && !_jumpPressed)
@@ -113,19 +128,33 @@ public class PlayerMove : MonoBehaviour
         else if (_HasGravity)
         {
             velocity.y -= gravity * Time.deltaTime;
-            if(_characterController.isGrounded) _jumpPressed = false;
+            if (_characterController.isGrounded) _jumpPressed = false;
         }
+
         Vector3 move = finalDirection * _speed;
         move += velocity;
         _characterController.Move(move * Time.deltaTime);
     }
-    
+
     void RotateTowardsInput()
     {
+        if (!_movementEnabled) return; 
+
         if (finalDirection.sqrMagnitude > 0.001f)
         {
             Quaternion targetRotation = Quaternion.LookRotation(finalDirection);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 15f * Time.deltaTime);
+        }
+    }
+    public void SetMovementEnabled(bool enabled)
+    {
+        _movementEnabled = enabled;
+
+        if (!enabled)
+        {
+            _direction = Vector3.zero;
+            _animator.SetBool("IsWalking", false);
+            _animator.SetBool("IsRunning", false);
         }
     }
 }

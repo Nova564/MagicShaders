@@ -9592,7 +9592,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 344084c8f3e372049894ac81476bae71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _flameTelegraphPrefab: {fileID: 6164397250781803980, guid: 7e44b4f034cbe914d8bb9bfd5b319c91, type: 3}
+  _flameTelegraphPrefab: {fileID: 2537048332181777339, guid: 40a74c2a4fee20047a05d7cd8de55add, type: 3}
   _flameSpellPrefab: {fileID: 5549831922309512104, guid: 6cb3c134efd9eba4ab46899e6c7fb85a, type: 3}
   _castActionKey:
     m_UseReference: 0
@@ -9611,8 +9611,8 @@ MonoBehaviour:
   _range: 15
   _useNewInputSystem: 0
   _telegraphHeightOffset: 0.05
-  _flameSpellHeightOffset: 0.01
-  _playerOffset: 1
+  _flameSpellHeightOffset: 2
+  _playerOffset: 4
   _validColor: {r: 0, g: 1, b: 0, a: 1}
   _invalidColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &1278503239
@@ -9650,7 +9650,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   _useNewInputSystem: 0
   _telegraphHeightOffset: 0.05
-  _lightningSpellHeightOffset: 0.01
+  _lightningSpellHeightOffset: 4
   _lightningSpawnYOffset: 4
   _spellLifetime: 3
   _validColor: {r: 0.5, g: 0.8, b: 1, a: 0.7}
