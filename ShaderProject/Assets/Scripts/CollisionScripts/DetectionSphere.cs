@@ -17,8 +17,6 @@ public class DetectionSphere : MonoBehaviour
 
         if (other.GetComponent<Pickable>())
         {
-            if (other.GetComponent<XpShard>()) 
-                CollisionSystem.Instance.HandleXpDrops(this.gameObject, other.gameObject);
             if (other.GetComponent<Item>())
             {
                 CollisionSystem.Instance.HandleItemPickup(this.gameObject, other.gameObject);

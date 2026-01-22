@@ -34,6 +34,8 @@ public class PlayerMove : MonoBehaviour
         _sprint.action.performed += StartSprint;
         _sprint.action.canceled += StopSprint;
         _jump.action.started += StartJump;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void OnDestroy()
