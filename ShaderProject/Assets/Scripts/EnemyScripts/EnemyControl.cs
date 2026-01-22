@@ -53,8 +53,7 @@ public class EnemyControl : MonoBehaviour
     private List<Projectile> _enemyProjectiles = new List<Projectile>();
     private float _projectileSpeed;
     private bool EIsRanged;
-    [SerializeField] private GameObject _XpShardPrefab;
-    [SerializeField] private GameObject _GoldPrefab;
+    [SerializeField] private List<GameObject> _DropsPrefab;
     [SerializeField] private AudioClip soundeffecthit;
     [SerializeField] private AudioClip soundeffectdeath;
 
@@ -92,13 +91,15 @@ public class EnemyControl : MonoBehaviour
     void OnDestroy()
     {
         //enemy meurt
-        if (player.GetComponent<PlayerController>().IsBattle.Contains(this.GameObject()))
+        // if (player.GetComponent<PlayerController>().IsBattle.Contains(this.GameObject()))
+        // {
+        //     player.GetComponent<PlayerController>().IsBattle.Remove(this.GameObject());
+        // }
+
+        foreach (var drops in _DropsPrefab)
         {
-            player.GetComponent<PlayerController>().IsBattle.Remove(this.GameObject());
+            GameObject NewDrop = Instantiate(drops, Vector3.zero, Quaternion.identity);
         }
-        GameObject XpDrop = Instantiate(_XpShardPrefab,  transform.position, Quaternion.identity);
-        GameObject GoldDrop = Instantiate(_GoldPrefab,  transform.position, Quaternion.identity);
-        XpDrop.GetComponent<XpShard>().XPAmount = Random.Range(50, 150);
         _enemyEntity.OnDamageTaken -= UpdateHealth;
         _enemyEntity.OnDeath -= EnemyDied;
     }
@@ -106,7 +107,10 @@ public class EnemyControl : MonoBehaviour
     void EnemyDied()
     {
         EIsDead=true;
-        SoundSystem.Instance.PlaySFX(soundeffectdeath, 0.3f);
+        if (soundeffectdeath != null)
+        {
+            SoundSystem.Instance.PlaySFX(soundeffectdeath, 0.3f);
+        }
     }
 
     private void LoadEnemy(SO_Enemy _data)
@@ -116,7 +120,14 @@ public class EnemyControl : MonoBehaviour
         GameObject visuals = Instantiate(enemyData.EntityModel, transform);
         visuals.transform.localPosition = new Vector3(0,0,0);
         visuals.transform.rotation = Quaternion.identity;
-        EAnimator = visuals.GetComponent<Animator>();
+        if (visuals.GetComponent<Animator>())
+        {
+            EAnimator = visuals.GetComponent<Animator>();
+        }
+        else
+        {
+            EAnimator = null;
+        }
 
         // Statistiques
         navAgent.speed = enemyData.Speed;
@@ -142,7 +153,7 @@ public class EnemyControl : MonoBehaviour
     {
         UpdateHealthBarPosition();
         EnemyStateHandler();
-        UpdateEnemyProjectile();
+        //UpdateEnemyProjectile();
     }
 
     void UpdateEnemyProjectile()
@@ -187,9 +198,12 @@ public class EnemyControl : MonoBehaviour
     
     void UpdateHealthBarPosition()
     {
-        GameObject healthbarBackground = healthbar.transform.parent.gameObject;
-        healthbarBackground.transform.position = new Vector3(transform.position.x, transform.position.y + EHeight + 1.0f, transform.position.z);
-        healthbarBackground.transform.forward = Camera.main.transform.forward;
+        if (healthbar != null)
+        {
+            GameObject healthbarBackground = healthbar.transform.parent.gameObject;
+            healthbarBackground.transform.position = new Vector3(transform.position.x, transform.position.y + EHeight + 1.0f, transform.position.z);
+            healthbarBackground.transform.forward = Camera.main.transform.forward;
+        }
     }
 
     private void EnemyStateHandler()
@@ -199,15 +213,21 @@ public class EnemyControl : MonoBehaviour
 
             EState = EnemyState.Dead;
             navAgent.enabled = false;
-            EAnimator.SetBool("IsDead", true);
-            EAnimator.SetTrigger("OnDeath");
+            if (EAnimator != null)
+            {
+                EAnimator.SetBool("IsDead", true);
+                EAnimator.SetTrigger("OnDeath");
+            }
+
             Destroy(gameObject, 0.8f);
         }
         else
         {
+            if (EAnimator != null)
             EAnimator.SetBool("IsAttacking", false);
             if (tookdamage)
             {
+                if (EAnimator != null)
                 EAnimator.SetTrigger("GotHit");
                 tookdamage = false;
                 EState = EnemyState.Hit;
@@ -236,6 +256,7 @@ public class EnemyControl : MonoBehaviour
                 else if (EState != EnemyState.Hit)
                 {
                     EState = EnemyState.Idle;
+                    if (EAnimator != null)
                     EAnimator.SetBool("IsIdle", true);
                 }
                 }
@@ -260,19 +281,24 @@ public class EnemyControl : MonoBehaviour
             if (EState != EnemyState.Dead && EState != EnemyState.Attack && EState != EnemyState.Hit && navAgent.enabled)
             {
                 EState = EnemyState.Walking;
-                EAnimator.SetBool("IsWalking", true);
-                EAnimator.SetBool("IsIdle", false);
+                if (EAnimator != null)
+                {
+                    EAnimator.SetBool("IsWalking", true);
+                    EAnimator.SetBool("IsIdle", false);
+                }
 
 
             }
             else if (EState == EnemyState.Hit && (Time.time > hittime + recovery))
             {
                 EState = EnemyState.Idle;
+                if (EAnimator != null)
                 EAnimator.SetBool("IsIdle", true);
             }
             else if (EState != EnemyState.Attack && EState != EnemyState.Hit)
             {
                 EState = EnemyState.Idle;
+                if (EAnimator != null)
                 EAnimator.SetBool("IsIdle", true);
             }
             Move();
@@ -287,8 +313,12 @@ public class EnemyControl : MonoBehaviour
         //attaque
         if (Time.time > nextAtk)
         {
-            EAnimator.SetBool("IsAttacking", true);
-            EAnimator.SetBool("IsIdle", false);
+            if (EAnimator != null)
+            {
+                EAnimator.SetBool("IsAttacking", true);
+                EAnimator.SetBool("IsIdle", false);
+            }
+
             nextAtk = Time.time + AtkSpeed;
            
             if (EIsRanged)
@@ -308,7 +338,7 @@ public class EnemyControl : MonoBehaviour
                 projectile.IsPlayer = _enemyEntity.IsPlayer;
                 Hitbox.GetComponent<ProjectileStats>().projectile = projectile;
                 _enemyProjectiles.Add(projectile);
-                SoundSystem.Instance.PlaySFX(soundeffecthit, 0.3f);
+                if(soundeffecthit != null) SoundSystem.Instance.PlaySFX(soundeffecthit, 0.3f);
             }
             else
             {
@@ -325,7 +355,7 @@ public class EnemyControl : MonoBehaviour
                 projectile.Damage = _enemyEntity.Damage;
                 projectile.IsPlayer = _enemyEntity.IsPlayer;
                 Hitbox.GetComponent<ProjectileStats>().projectile = projectile;
-                SoundSystem.Instance.PlaySFX(soundeffecthit, 0.3f);
+                if(soundeffecthit != null) SoundSystem.Instance.PlaySFX(soundeffecthit, 0.3f);
             }
             PlayShootSounds();
             
@@ -336,6 +366,7 @@ public class EnemyControl : MonoBehaviour
     {
         if (EState != EnemyState.Walking)
         {
+            if (EAnimator != null)
             EAnimator.SetBool("IsWalking", false);
             navAgent.isStopped = true;
             return;

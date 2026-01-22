@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee11e9896772d684da3f3ca1701af76d, type: 3}
+  m_Name: MainEnemy
+  m_EditorClassIdentifier: 
+  Name: Main Enemy
+  Health: 25
+  MaxHealth: 25
+  IsDead: 0
+  Damage: 5
+  Speed: 4
+  AttackSpeed: 1
+  AttackRange: 4
+  AggroRange: 10
+  IsRanged: 0
+  ProjectileSpeed: 0
+  EntityModel: {fileID: 1769110892610440983, guid: 50ef0f2594f681744aa0cfd1171811aa, type: 3}
+  IsBoss: 0
