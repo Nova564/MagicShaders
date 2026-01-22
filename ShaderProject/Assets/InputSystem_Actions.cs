@@ -207,6 +207,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Press"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reveal"",
+                    ""type"": ""Button"",
+                    ""id"": ""15db085d-12c3-4b2a-ab59-110d456d3af3"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -636,6 +645,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""FourthSpell"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""82d074be-9e9b-48a0-96e2-016f3811c696"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reveal"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1236,6 +1256,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_SecondSpell = m_Player.FindAction("SecondSpell", throwIfNotFound: true);
         m_Player_ThirdSpell = m_Player.FindAction("ThirdSpell", throwIfNotFound: true);
         m_Player_FourthSpell = m_Player.FindAction("FourthSpell", throwIfNotFound: true);
+        m_Player_Reveal = m_Player.FindAction("Reveal", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1342,6 +1363,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_SecondSpell;
     private readonly InputAction m_Player_ThirdSpell;
     private readonly InputAction m_Player_FourthSpell;
+    private readonly InputAction m_Player_Reveal;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1405,6 +1427,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/FourthSpell".
         /// </summary>
         public InputAction @FourthSpell => m_Wrapper.m_Player_FourthSpell;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Reveal".
+        /// </summary>
+        public InputAction @Reveal => m_Wrapper.m_Player_Reveal;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1470,6 +1496,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @FourthSpell.started += instance.OnFourthSpell;
             @FourthSpell.performed += instance.OnFourthSpell;
             @FourthSpell.canceled += instance.OnFourthSpell;
+            @Reveal.started += instance.OnReveal;
+            @Reveal.performed += instance.OnReveal;
+            @Reveal.canceled += instance.OnReveal;
         }
 
         /// <summary>
@@ -1520,6 +1549,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @FourthSpell.started -= instance.OnFourthSpell;
             @FourthSpell.performed -= instance.OnFourthSpell;
             @FourthSpell.canceled -= instance.OnFourthSpell;
+            @Reveal.started -= instance.OnReveal;
+            @Reveal.performed -= instance.OnReveal;
+            @Reveal.canceled -= instance.OnReveal;
         }
 
         /// <summary>
@@ -1911,6 +1943,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnFourthSpell(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Reveal" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnReveal(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

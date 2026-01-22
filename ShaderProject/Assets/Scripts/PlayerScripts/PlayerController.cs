@@ -16,14 +16,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] InputActionProperty _lightningAttack;
     [SerializeField] InputActionProperty _IceAttack;
     [SerializeField] InputActionProperty _vortexAttack;
+    [SerializeField] InputActionProperty _revealAttack;
     [SerializeField] InputActionProperty _interact;
     [SerializeField] GameObject AutoAttackPrefab;
 
-    // Références aux SpellCasters au lieu des préfabs directs
     private SpellFlameCaster _flameCaster;
     private SpellLightningCaster _lightningCaster;
     private SpellIceCaster _iceCaster;
     private SpellVoidCaster _vortexCaster;
+    private SpellRevealCaster _revealCaster;
 
     [SerializeField] private List<AudioClip> audioSource;
     [SerializeField] Animator _moveAnimator;
@@ -32,6 +33,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float AtkCoolDown3 = 10.0f;
     [SerializeField] float AtkCoolDown4 = 50.0f;
     [SerializeField] float AtkCoolDown5 = 50.0f;
+    [SerializeField] float AtkCoolDown6 = 15.0f;
     [SerializeField] Transform _handTransform;
     private ConstraintSource _constraintSource;
     float nextAtk;
@@ -39,8 +41,9 @@ public class PlayerController : MonoBehaviour
     float nextAtk3;
     float nextAtk4;
     float nextAtk5;
+    float nextAtk6;
     public static event Action<float, int> OnCoolDownAtk;
-    public static event Action<int, bool> OnSpellStateChanged; 
+    public static event Action<int, bool> OnSpellStateChanged;
     private List<Projectile> _playerProjectiles = new List<Projectile>();
     [SerializeField] List<Quest> _ListQuests = new List<Quest>();
     public List<bool> IsBattle { get { return isBattle; } set { isBattle = value; } }
@@ -60,6 +63,7 @@ public class PlayerController : MonoBehaviour
         _lightningAttack.action.performed += Attack3;
         _IceAttack.action.performed += Attack4;
         _vortexAttack.action.performed += Attack5;
+        _revealAttack.action.performed += Attack6;
 
         _constraintSource = new ConstraintSource
         {
@@ -71,16 +75,19 @@ public class PlayerController : MonoBehaviour
         _lightningCaster = GetComponent<SpellLightningCaster>();
         _iceCaster = GetComponent<SpellIceCaster>();
         _vortexCaster = GetComponent<SpellVoidCaster>();
+        _revealCaster = GetComponent<SpellRevealCaster>();
 
         if (_flameCaster == null) _flameCaster = gameObject.AddComponent<SpellFlameCaster>();
         if (_lightningCaster == null) _lightningCaster = gameObject.AddComponent<SpellLightningCaster>();
         if (_iceCaster == null) _iceCaster = gameObject.AddComponent<SpellIceCaster>();
         if (_vortexCaster == null) _vortexCaster = gameObject.AddComponent<SpellVoidCaster>();
+        if (_revealCaster == null) _revealCaster = gameObject.AddComponent<SpellRevealCaster>();
 
         _flameCaster.enabled = false;
         _lightningCaster.enabled = false;
         _iceCaster.enabled = false;
         _vortexCaster.enabled = false;
+        _revealCaster.enabled = true;
     }
 
     void OnDestroy()
@@ -90,6 +97,7 @@ public class PlayerController : MonoBehaviour
         _lightningAttack.action.performed -= Attack3;
         _IceAttack.action.performed -= Attack4;
         _vortexAttack.action.performed -= Attack5;
+        _revealAttack.action.performed -= Attack6;
     }
 
     void Attack1(InputAction.CallbackContext ctx)
@@ -108,7 +116,7 @@ public class PlayerController : MonoBehaviour
         if (!_isFlameInTelegraph && Time.time > nextAtk2)
         {
             _isFlameInTelegraph = true;
-            OnSpellStateChanged?.Invoke(1, true); 
+            OnSpellStateChanged?.Invoke(1, true);
             _flameCaster.ActivateTelegraph();
             _flameCaster.enabled = true;
         }
@@ -117,8 +125,8 @@ public class PlayerController : MonoBehaviour
             _flameCaster.CastSpell();
             _moveAnimator.SetTrigger("FireAttack");
             nextAtk2 = Time.time + AtkCoolDown2;
-            OnCoolDownAtk?.Invoke(AtkCoolDown2, 1); 
-            OnSpellStateChanged?.Invoke(1, false); 
+            OnCoolDownAtk?.Invoke(AtkCoolDown2, 1);
+            OnSpellStateChanged?.Invoke(1, false);
             _isFlameInTelegraph = false;
             _flameCaster.enabled = false;
         }
@@ -129,7 +137,7 @@ public class PlayerController : MonoBehaviour
         if (!_isLightningInTelegraph && Time.time > nextAtk3)
         {
             _isLightningInTelegraph = true;
-            OnSpellStateChanged?.Invoke(2, true); 
+            OnSpellStateChanged?.Invoke(2, true);
             _lightningCaster.ActivateTelegraph();
             _lightningCaster.enabled = true;
         }
@@ -159,7 +167,7 @@ public class PlayerController : MonoBehaviour
             _iceCaster.CastSpell();
             _moveAnimator.SetTrigger("IceAttack");
             nextAtk4 = Time.time + AtkCoolDown4;
-            OnCoolDownAtk?.Invoke(AtkCoolDown4, 3); 
+            OnCoolDownAtk?.Invoke(AtkCoolDown4, 3);
             OnSpellStateChanged?.Invoke(3, false);
             _isIceInTelegraph = false;
             _iceCaster.enabled = false;
@@ -171,7 +179,7 @@ public class PlayerController : MonoBehaviour
         if (!_isVortexInTelegraph && Time.time > nextAtk5)
         {
             _isVortexInTelegraph = true;
-            OnSpellStateChanged?.Invoke(4, true); 
+            OnSpellStateChanged?.Invoke(4, true);
             _vortexCaster.ActivateTelegraph();
             _vortexCaster.enabled = true;
         }
@@ -181,10 +189,20 @@ public class PlayerController : MonoBehaviour
             _vortexCaster.CastSpell();
             _moveAnimator.SetTrigger("VortexAttack");
             nextAtk5 = Time.time + AtkCoolDown5;
-            OnCoolDownAtk?.Invoke(AtkCoolDown5, 4); 
+            OnCoolDownAtk?.Invoke(AtkCoolDown5, 4);
             OnSpellStateChanged?.Invoke(4, false);
             _isVortexInTelegraph = false;
             _vortexCaster.enabled = false;
+        }
+    }
+
+    void Attack6(InputAction.CallbackContext ctx)
+    {
+        if (Time.time > nextAtk6)
+        {
+            _revealCaster.CastSpell();
+            nextAtk6 = Time.time + AtkCoolDown6;
+            OnCoolDownAtk?.Invoke(AtkCoolDown6, 5);
         }
     }
 
@@ -194,7 +212,7 @@ public class PlayerController : MonoBehaviour
         spawnPosition.y += YProjOffSet;
         Quaternion spawnRotation = transform.rotation;
         GameObject Hitbox = Instantiate(AutoAttackPrefab, spawnPosition, spawnRotation);
-        CreateProjectile(Hitbox, 7, 1.5f, 0.3f, AtkCoolDown, -1); 
+        CreateProjectile(Hitbox, 7, 1.5f, 0.3f, AtkCoolDown, -1);
         ParentConstraint constraint = Hitbox.AddComponent<ParentConstraint>();
         constraint.AddSource(_constraintSource);
         constraint.locked = true;
