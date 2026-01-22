@@ -12823,6 +12823,10 @@ PrefabInstance:
       propertyPath: _telegraphPrefab
       value: 
       objectReference: {fileID: 6164397250781803980, guid: 7e44b4f034cbe914d8bb9bfd5b319c91, type: 3}
+    - target: {fileID: 5168023498758924989, guid: f5e0d5103cf0c9e48afa93503cad9586, type: 3}
+      propertyPath: _voidTrapHeightOffset
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

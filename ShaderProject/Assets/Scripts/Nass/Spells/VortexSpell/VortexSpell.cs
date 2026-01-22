@@ -11,6 +11,27 @@ public class VortexSpell : MonoBehaviour
     [SerializeField] private float _activationDuration = 5f;
     [SerializeField] private float _damagePerSecond = 50f;
 
+    [Header("Fade Out")]
+    [SerializeField] private float _fadeOutDuration = 1.5f;
+    [SerializeField] private AnimationCurve _fadeOutCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
+
+    [Header("Camera Shake")]
+    [SerializeField] private bool _enablePlacementShake = true;
+    [SerializeField] private float _placementShakeIntensity = 2f;
+    [SerializeField] private float _placementShakeDuration = 0.15f;
+    [SerializeField] private bool _enableFullChargeShake = true;
+    [SerializeField] private float _fullChargeShakeIntensity = 5f;
+    [SerializeField] private float _fullChargeShakeDuration = 0.3f;
+    [SerializeField] private AnimationCurve _fullChargeShakeCurve;
+
+    [Header("Point Light")]
+    [SerializeField] private Light _vortexLight;
+    [SerializeField] private float _minLightIntensity = 0f;
+    [SerializeField] private float _maxLightIntensity = 12f;
+    [SerializeField] private float _minLightRange = 2f;
+    [SerializeField] private float _maxLightRange = 8f;
+    [SerializeField] private AnimationCurve _lightIntensityCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
     private Material _groundCrackMaterial;
     private Material _vortexMaterial;
     private Material _energyPillarMaterial;
@@ -18,6 +39,7 @@ public class VortexSpell : MonoBehaviour
     private float _currentCharge;
     private bool _isActivated;
     private float _activationTime;
+    private bool _isFadingOut;
 
     void Awake()
     {
@@ -48,12 +70,34 @@ public class VortexSpell : MonoBehaviour
                 _energyPillarMaterial.SetFloat("_RiseAmount", 0f);
             }
         }
+
+        if (_fullChargeShakeCurve == null || _fullChargeShakeCurve.length == 0)
+        {
+            _fullChargeShakeCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
+        }
+
+        if (_vortexLight == null)
+        {
+            _vortexLight = GetComponentInChildren<Light>();
+        }
+
+        if (_vortexLight != null)
+        {
+            _vortexLight.intensity = _minLightIntensity;
+            _vortexLight.range = _minLightRange;
+        }
     }
 
     public void ActivateSpell(float chargeTime)
     {
         _isActivated = true;
         _activationTime = Time.time;
+
+        if (_enablePlacementShake && CameraShakeManager.Instance != null)
+        {
+            CameraShakeManager.Instance.ShakeQuick(_placementShakeIntensity, _placementShakeDuration);
+        }
+
         StartCoroutine(ChargeUpAnimation());
     }
 
@@ -66,11 +110,18 @@ public class VortexSpell : MonoBehaviour
             elapsed += Time.deltaTime;
             _currentCharge = _chargeCurve.Evaluate(elapsed / _chargeUpDuration);
             UpdateShaderProperties(_currentCharge);
+            UpdateVortexLight(_currentCharge);
             yield return null;
         }
 
         _currentCharge = 1f;
         UpdateShaderProperties(1f);
+        UpdateVortexLight(1f);
+
+        if (_enableFullChargeShake && CameraShakeManager.Instance != null)
+        {
+            CameraShakeManager.Instance.ShakeCamera(_fullChargeShakeIntensity, _fullChargeShakeDuration, _fullChargeShakeCurve);
+        }
     }
 
     void UpdateShaderProperties(float charge)
@@ -87,6 +138,7 @@ public class VortexSpell : MonoBehaviour
         {
             _groundCrackMaterial.SetFloat("_Intensity", charge);
             _groundCrackMaterial.SetFloat("_CrackGlow", Mathf.Lerp(0.5f, 3f, charge));
+            _groundCrackMaterial.SetFloat("_EmissionStrength", Mathf.Lerp(2f, 8f, charge));
         }
 
         if (_energyPillarMaterial != null)
@@ -98,17 +150,50 @@ public class VortexSpell : MonoBehaviour
         }
     }
 
+    void UpdateVortexLight(float charge)
+    {
+        if (_vortexLight != null)
+        {
+            float curveValue = _lightIntensityCurve.Evaluate(charge);
+            _vortexLight.intensity = Mathf.Lerp(_minLightIntensity, _maxLightIntensity, curveValue);
+            _vortexLight.range = Mathf.Lerp(_minLightRange, _maxLightRange, curveValue);
+        }
+    }
+
     void Update()
     {
-        if (_isActivated && Time.time - _activationTime >= _chargeUpDuration + _activationDuration)
+        if (_isActivated && !_isFadingOut && Time.time - _activationTime >= _chargeUpDuration + _activationDuration)
         {
-            Destroy(gameObject);
+            StartCoroutine(FadeOutAndDestroy());
         }
+    }
+
+    private IEnumerator FadeOutAndDestroy()
+    {
+        _isFadingOut = true;
+        float elapsed = 0f;
+
+        while (elapsed < _fadeOutDuration)
+        {
+            elapsed += Time.deltaTime;
+            float fadeProgress = elapsed / _fadeOutDuration;
+            float fadeValue = _fadeOutCurve.Evaluate(fadeProgress);
+
+            UpdateShaderProperties(fadeValue);
+            UpdateVortexLight(fadeValue);
+
+            yield return null;
+        }
+
+        UpdateShaderProperties(0f);
+        UpdateVortexLight(0f);
+
+        Destroy(gameObject);
     }
 
     void OnTriggerStay(Collider other)
     {
-        if (_isActivated && _currentCharge >= 1f && other.CompareTag("Enemy"))
+        if (_isActivated && _currentCharge >= 1f && !_isFadingOut && other.CompareTag("Enemy"))
         {
             //système santé à implémenter
         }
