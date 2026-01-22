@@ -16,6 +16,12 @@ public class IceSpell : MonoBehaviour
     [SerializeField] private GameObject _explosionParticlePrefab;
     [SerializeField] private Material _customIceMaterial;
 
+    [Header("Camera Shake")]
+    [SerializeField] private bool _enableExplosionShake = true;
+    [SerializeField] private float _explosionShakeIntensity = 4f;
+    [SerializeField] private float _explosionShakeDuration = 0.3f;
+    [SerializeField] private AnimationCurve _explosionShakeCurve;
+
     private Material _iceMaterial;
     private LineRenderer _chainLineRenderer;
     private Transform _targetEnemy;
@@ -70,6 +76,11 @@ public class IceSpell : MonoBehaviour
         if (_iceMaterial != null && _iceMaterial.HasProperty("_FogIntensity"))
         {
             _iceMaterial.SetFloat("_FogIntensity", 0f);
+        }
+
+        if (_explosionShakeCurve == null || _explosionShakeCurve.length == 0)
+        {
+            _explosionShakeCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
         }
     }
 
@@ -176,7 +187,10 @@ public class IceSpell : MonoBehaviour
             Destroy(particles, 3f);
         }
 
-        Debug.Log($"Ice spell exploded on {_targetEnemy.name}!");
+        if (_enableExplosionShake && CameraShakeManager.Instance != null)
+        {
+            CameraShakeManager.Instance.ShakeCamera(_explosionShakeIntensity, _explosionShakeDuration, _explosionShakeCurve);
+        }
     }
 
     void ApplyDamage()
