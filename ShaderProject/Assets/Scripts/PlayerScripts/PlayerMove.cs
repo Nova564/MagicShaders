@@ -9,11 +9,8 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] InputActionProperty _move;
     [SerializeField] InputActionProperty _sprint;
     [SerializeField] InputActionProperty _jump;
-    [SerializeField] InputActionProperty _boost;
     [SerializeField] float _speed = 5;
     [SerializeField] float _jumpForce = 4;
-    [SerializeField] float _boostSpeed = 15;
-    [SerializeField] float _boostDuration = 2f;
     [SerializeField] CharacterController _characterController;
     [SerializeField] bool _HasGravity = true;
     [SerializeField] Animator _animator;
@@ -27,8 +24,6 @@ public class PlayerMove : MonoBehaviour
     private const float mouseStillDelay = 0.1f;
     private bool _jumpPressed = false;
     private bool _movementEnabled = true;
-    private bool _isBoosting = false;
-    private TrailScript _trailScript;
 
     void Start()
     {
@@ -38,10 +33,6 @@ public class PlayerMove : MonoBehaviour
         _sprint.action.performed += StartSprint;
         _sprint.action.canceled += StopSprint;
         _jump.action.started += StartJump;
-        _boost.action.Enable();
-        _boost.action.started += StartBoost;
-
-        _trailScript = GetComponent<TrailScript>();
 
         if (CursorManager.Instance != null)
         {
@@ -61,7 +52,6 @@ public class PlayerMove : MonoBehaviour
         _sprint.action.performed -= StartSprint;
         _sprint.action.canceled -= StopSprint;
         _jump.action.started -= StartJump;
-        _boost.action.started -= StartBoost;
     }
 
     void StartMove(InputAction.CallbackContext ctx)
@@ -116,27 +106,6 @@ public class PlayerMove : MonoBehaviour
         _animator.SetBool("IsRunning", false);
     }
 
-    void StartBoost(InputAction.CallbackContext ctx)
-    {
-        if (!_movementEnabled || _isBoosting) return;
-
-        StartCoroutine(BoostCoroutine());
-    }
-
-    System.Collections.IEnumerator BoostCoroutine()
-    {
-        _isBoosting = true;
-
-        if (_trailScript != null)
-        {
-            _trailScript.ActivateTrailExternal(_boostDuration);
-        }
-
-        yield return new WaitForSeconds(_boostDuration);
-
-        _isBoosting = false;
-    }
-
     public void TpTo(Vector3 TPpos)
     {
         _characterController.enabled = false;
@@ -171,8 +140,7 @@ public class PlayerMove : MonoBehaviour
             if (_characterController.isGrounded) _jumpPressed = false;
         }
 
-        float currentSpeed = _isBoosting ? _boostSpeed : _speed;
-        Vector3 move = finalDirection * currentSpeed;
+        Vector3 move = finalDirection * _speed;
         move += velocity;
         _characterController.Move(move * Time.deltaTime);
     }
