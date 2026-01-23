@@ -54,7 +54,7 @@
                     "name": "Jump",
                     "type": "Button",
                     "id": "f1ba0d36-48eb-4cd5-b651-1c94a6531f70",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -126,6 +126,15 @@
                     "name": "Reveal",
                     "type": "Button",
                     "id": "15db085d-12c3-4b2a-ab59-110d456d3af3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MiniSprint",
+                    "type": "Button",
+                    "id": "55520636-2dd7-43b4-b9ff-2d2f2b6466ff",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -570,6 +579,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Reveal",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7a5460f4-e682-41eb-9c69-a9c4f8ce6f1b",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MiniSprint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

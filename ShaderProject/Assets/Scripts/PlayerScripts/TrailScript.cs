@@ -19,22 +19,32 @@ public class TrailScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             StartCoroutine(ActivateTrail(activeTime));
         }
     }
 
+    public void ActivateTrailExternal(float duration)
+    {
+        if (!isTrailActive)
+        {
+            StartCoroutine(ActivateTrail(duration));
+        }
+    }
+
     IEnumerator ActivateTrail(float timeActive)
     {
-        while(timeActive > 0)
+        isTrailActive = true;
+
+        while (timeActive > 0)
         {
             timeActive -= meshRefreshRate;
 
             if (skinnedMeshRenderers == null)
                 skinnedMeshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
 
-            for(int i=0; i<skinnedMeshRenderers.Length; i++) 
+            for (int i = 0; i < skinnedMeshRenderers.Length; i++)
             {
                 GameObject trailObj = new GameObject();
                 trailObj.transform.SetPositionAndRotation(positionToSpawn.position, positionToSpawn.rotation);
@@ -62,7 +72,7 @@ public class TrailScript : MonoBehaviour
     {
         float valueToAnim = mat.GetFloat(shaderRef);
 
-        while(valueToAnim > goal)
+        while (valueToAnim > goal)
         {
             valueToAnim -= rate;
             mat.SetFloat(shaderRef, valueToAnim);

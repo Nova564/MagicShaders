@@ -140,7 +140,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""f1ba0d36-48eb-4cd5-b651-1c94a6531f70"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -212,6 +212,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""name"": ""Reveal"",
                     ""type"": ""Button"",
                     ""id"": ""15db085d-12c3-4b2a-ab59-110d456d3af3"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MiniSprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""55520636-2dd7-43b4-b9ff-2d2f2b6466ff"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -656,6 +665,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Reveal"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7a5460f4-e682-41eb-9c69-a9c4f8ce6f1b"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MiniSprint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1257,6 +1277,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_ThirdSpell = m_Player.FindAction("ThirdSpell", throwIfNotFound: true);
         m_Player_FourthSpell = m_Player.FindAction("FourthSpell", throwIfNotFound: true);
         m_Player_Reveal = m_Player.FindAction("Reveal", throwIfNotFound: true);
+        m_Player_MiniSprint = m_Player.FindAction("MiniSprint", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1364,6 +1385,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_ThirdSpell;
     private readonly InputAction m_Player_FourthSpell;
     private readonly InputAction m_Player_Reveal;
+    private readonly InputAction m_Player_MiniSprint;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1432,6 +1454,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Reveal => m_Wrapper.m_Player_Reveal;
         /// <summary>
+        /// Provides access to the underlying input action "Player/MiniSprint".
+        /// </summary>
+        public InputAction @MiniSprint => m_Wrapper.m_Player_MiniSprint;
+        /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -1499,6 +1525,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Reveal.started += instance.OnReveal;
             @Reveal.performed += instance.OnReveal;
             @Reveal.canceled += instance.OnReveal;
+            @MiniSprint.started += instance.OnMiniSprint;
+            @MiniSprint.performed += instance.OnMiniSprint;
+            @MiniSprint.canceled += instance.OnMiniSprint;
         }
 
         /// <summary>
@@ -1552,6 +1581,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Reveal.started -= instance.OnReveal;
             @Reveal.performed -= instance.OnReveal;
             @Reveal.canceled -= instance.OnReveal;
+            @MiniSprint.started -= instance.OnMiniSprint;
+            @MiniSprint.performed -= instance.OnMiniSprint;
+            @MiniSprint.canceled -= instance.OnMiniSprint;
         }
 
         /// <summary>
@@ -1950,6 +1982,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnReveal(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MiniSprint" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMiniSprint(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

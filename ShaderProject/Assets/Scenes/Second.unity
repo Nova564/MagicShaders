@@ -12945,6 +12945,18 @@ PrefabInstance:
       propertyPath: _telegraphHeightOffset
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 5715044429623990157, guid: f5e0d5103cf0c9e48afa93503cad9586, type: 3}
+      propertyPath: _boost.m_Reference
+      value: 
+      objectReference: {fileID: -3024503819637608639, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    - target: {fileID: 5715044429623990157, guid: f5e0d5103cf0c9e48afa93503cad9586, type: 3}
+      propertyPath: _boost.m_UseReference
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5715044429623990157, guid: f5e0d5103cf0c9e48afa93503cad9586, type: 3}
+      propertyPath: _boost.m_Action.m_Name
+      value: Boost
+      objectReference: {fileID: 0}
     - target: {fileID: 7511167228166746870, guid: f5e0d5103cf0c9e48afa93503cad9586, type: 3}
       propertyPath: _revealAttack.m_Reference
       value: 
