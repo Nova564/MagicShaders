@@ -15644,11 +15644,11 @@ MonoBehaviour:
   _validColor: {r: 0.5, g: 0.8, b: 1, a: 0.7}
   _invalidColor: {r: 1, g: 0, b: 0, a: 1}
   _enableCastShake: 1
-  _castShakeIntensity: 1
+  _castShakeIntensity: 10
   _castShakeDuration: 0.1
   _enableImpactShake: 1
-  _impactShakeDelay: 0.5
-  _impactShakeIntensity: 6
+  _impactShakeDelay: 0.1
+  _impactShakeIntensity: 20
   _impactShakeDuration: 0.4
   _impactShakeCurve:
     serializedVersion: 2
@@ -18296,6 +18296,51 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9a32147e38101fd48876749fd208348d, type: 3}
+--- !u!1 &1463824796
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1463824798}
+  - component: {fileID: 1463824797}
+  m_Layer: 0
+  m_Name: CameraShakeManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1463824797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1463824796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7500db1f042fe2843a5e908fd2cc4f8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _virtualCamera: {fileID: 1881034951}
+--- !u!4 &1463824798
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1463824796}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -14.62416, y: 0.16794, z: 3.40987}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1466087781
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27230,3 +27275,4 @@ SceneRoots:
   - {fileID: 1706098920}
   - {fileID: 1982222192}
   - {fileID: 2120154369}
+  - {fileID: 1463824798}
