@@ -85,5 +85,13 @@ public class RangedSphereHitBox : MonoBehaviour
 
             Destroy(this.gameObject);
         }
+        else if(other.tag == "Enemy")
+        {
+            if (projectileStats != null && projectileStats.CollisionParticle != null)
+            {
+                projectileStats.SpawnParticle(projectileStats.CollisionParticle);
+            }
+            Destroy(this.gameObject);
+        }
     }
 }

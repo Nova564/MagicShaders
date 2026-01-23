@@ -43,6 +43,7 @@ public class EnemyControl : MonoBehaviour
     [SerializeField] GameObject hitboxPrefab;
 
     [SerializeField] EnemyState EState;
+    
 
     private GameObject player;
     [SerializeField] private List<AudioClip> ShootSounds = new List<AudioClip>();
