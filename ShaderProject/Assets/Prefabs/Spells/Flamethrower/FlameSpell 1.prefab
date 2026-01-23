@@ -220,7 +220,6 @@ GameObject:
   - component: {fileID: -44191591174323405}
   - component: {fileID: 7298587221085401108}
   - component: {fileID: 4844872537880607913}
-  - component: {fileID: 6728923134710924878}
   m_Layer: 0
   m_Name: FlameSpell 1
   m_TagString: Untagged
@@ -414,18 +413,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _collisionParticle: {fileID: 7559121499666770464, guid: 6703d547568065b4aaa4a86efdf765fd, type: 3}
   _launchParticle: {fileID: 0}
---- !u!114 &6728923134710924878
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5549831922309512104}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ffbfd771f8dec74bb437f50ff8c2719, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5886598869950019927
 GameObject:
   m_ObjectHideFlags: 0
