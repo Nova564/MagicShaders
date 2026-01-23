@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6535859821837512937}
   - component: {fileID: 2162878040639979051}
+  - component: {fileID: -3863133340269763645}
   m_Layer: 0
   m_Name: IceSpell
   m_TagString: Untagged
@@ -75,3 +76,26 @@ MonoBehaviour:
   _chainWidth: 0.25
   _explosionParticlePrefab: {fileID: 5365076228851995366, guid: 12a6cc8e0e229f147835ece09473b90b, type: 3}
   _customIceMaterial: {fileID: 2100000, guid: 2a21b07f178fa514abfb027b108f115b, type: 2}
+  _enableExplosionShake: 1
+  _explosionShakeIntensity: 4
+  _explosionShakeDuration: 0.3
+  _explosionShakeCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &-3863133340269763645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8010471335801810890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e31b360add1cacc449ddafd6d444b56f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _collisionParticle: {fileID: 0}
+  _launchParticle: {fileID: 0}

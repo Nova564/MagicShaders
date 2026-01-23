@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 5864574584285875022}
   - component: {fileID: 1878455390486547016}
   - component: {fileID: 7802836548825048579}
-  m_Layer: 0
+  - component: {fileID: 2321043753616786021}
+  m_Layer: 6
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -60,6 +61,7 @@ MonoBehaviour:
   _Maxhealth: 100
   _damage: 5
   soundeffectdamage: {fileID: 0}
+  _HitParticle: {fileID: 548778247045323516, guid: a282b6c98fec7364cba488c0ad8bd7d9, type: 3}
 --- !u!195 &1878455390486547016
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -108,3 +110,26 @@ MonoBehaviour:
   - {fileID: 4129119210478951477, guid: ae1ecf64098332744b695d327fb28515, type: 3}
   soundeffecthit: {fileID: 0}
   soundeffectdeath: {fileID: 0}
+--- !u!136 &2321043753616786021
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 975746313459155659}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}

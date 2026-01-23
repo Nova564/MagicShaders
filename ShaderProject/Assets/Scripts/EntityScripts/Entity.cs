@@ -10,6 +10,7 @@ public class Entity : MonoBehaviour
     [SerializeField] private float _Maxhealth = 100;
     [SerializeField] private float _damage = 5;
     [SerializeField] private AudioClip soundeffectdamage;
+    [SerializeField] private ParticleSystem _HitParticle;
     private int _gold = 0;
     private float _XptoLvlUp = 100;
     private List<Item> _inventory = new List<Item>();
@@ -35,11 +36,18 @@ public class Entity : MonoBehaviour
     {
         Health -= damage;
         UpdateHealth();
-        OnDamageTaken?.Invoke();
+        
         if (soundeffectdamage != null)
         {
             SoundSystem.Instance.PlaySFX(soundeffectdamage, 0.3f);
         }
+
+        if (_HitParticle != null)
+        {
+            Debug.Log("Hit");
+            Instantiate(_HitParticle, transform.position, Quaternion.identity);
+        }
+        OnDamageTaken?.Invoke();
     }
     
 
