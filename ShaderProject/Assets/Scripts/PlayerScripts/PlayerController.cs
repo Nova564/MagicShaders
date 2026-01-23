@@ -203,7 +203,6 @@ public class PlayerController : MonoBehaviour
             _revealCaster.CastSpell();
             nextAtk6 = Time.time + AtkCoolDown6;
             OnCoolDownAtk?.Invoke(AtkCoolDown6, 5);
-            LaunchVortexAttack();
         }
     }
 
