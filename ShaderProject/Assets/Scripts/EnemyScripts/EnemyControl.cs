@@ -324,7 +324,6 @@ public class EnemyControl : MonoBehaviour
                 spawnPosition.y += EHeight;
                 Quaternion spawnRotation = transform.rotation;
                 GameObject Hitbox = Instantiate(hitboxPrefab, spawnPosition, spawnRotation);
-                //Hitbox.transform.SetParent(this.transform);
                 Projectile projectile = new Projectile();
                 projectile.projectile = Hitbox;
                 projectile.Direction = transform.forward.normalized;
